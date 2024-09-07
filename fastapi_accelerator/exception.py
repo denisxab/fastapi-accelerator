@@ -7,8 +7,8 @@ from fastapi.exception_handlers import http_exception_handler
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from common.middleware import request_log_format
-from common.timezone import get_datetime_now
+from fastapi_accelerator.middleware import request_log_format
+from fastapi_accelerator.timezone import get_datetime_now
 
 
 async def custom_http_exception_handler(request: Request, exc: StarletteHTTPException):

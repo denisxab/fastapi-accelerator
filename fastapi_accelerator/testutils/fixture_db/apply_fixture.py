@@ -8,7 +8,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from common.testutils.fixture_base import SettingTest
+from fastapi_accelerator.testutils.fixture_base import SettingTest
 
 
 @pytest.fixture(scope="session")

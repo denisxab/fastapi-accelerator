@@ -14,11 +14,11 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import class_mapper
 
-from common.cache import BaseCache, cache_redis
-from common.db import MainDatabaseManager, OrmAsync
-from common.db.dborm import SQL_TO_PYTHON_TYPE, T, deep_instance, get_pk
-from common.exception import HTTPException404
-from common.paginator import BasePaginatorClass
+from fastapi_accelerator.cache import BaseCache, cache_redis
+from fastapi_accelerator.db import MainDatabaseManager, OrmAsync
+from fastapi_accelerator.db.dborm import SQL_TO_PYTHON_TYPE, T, deep_instance, get_pk
+from fastapi_accelerator.exception import HTTPException404
+from fastapi_accelerator.paginator import BasePaginatorClass
 
 
 class BaseViewSet(abc.ABC):

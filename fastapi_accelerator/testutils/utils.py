@@ -4,8 +4,8 @@ from typing import Any, Callable, Generator, NamedTuple, Optional
 import pytest
 from fastapi import Response
 
-from common.testutils.fixture_auth import client_auth_jwt
-from common.testutils.fixture_base import SettingTest
+from fastapi_accelerator.testutils.fixture_auth import client_auth_jwt
+from fastapi_accelerator.testutils.fixture_base import SettingTest
 
 
 def rm_key_from_deep_dict(data: dict | list, keys: list[str]):

@@ -4,8 +4,8 @@ from typing import Self
 
 from fastapi import FastAPI
 
-from common.db.dbsession import MainDatabaseManager
-from common.utils import SingletonMeta
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.utils import SingletonMeta
 
 
 class SettingTest(metaclass=SingletonMeta):
@@ -15,11 +15,11 @@ class SettingTest(metaclass=SingletonMeta):
 
     ```python
     from app.core.config import TEST_DATABASE_URL
-    from common.db.dbsession import MainDatabaseManager
+    from fastapi_accelerator.db.dbsession import MainDatabaseManager
 
     # Вы можете указать точный список импорта, это для простоты мы импортируем все
-    from common.testutils import *  # noqa E402
-    from common.testutils import SettingTest
+    from fastapi_accelerator.testutils import *  # noqa E402
+    from fastapi_accelerator.testutils import SettingTest
 
     # Нужно создать менеджер БД до импорта APP
     # чтобы паттерн одиночка создал только тестовое instance

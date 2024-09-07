@@ -6,15 +6,15 @@ import re
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseModel
 import pytz
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from common.db.dbsession import MainDatabaseManager
-from common.exception import custom_http_exception_handler
-from common.middleware import log_request_response
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.exception import custom_http_exception_handler
+from fastapi_accelerator.middleware import log_request_response
 
 
 def base_pattern(

@@ -8,8 +8,8 @@ from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
-from common.db.dborm import OrmAsync
-from common.utils import SingletonMeta
+from fastapi_accelerator.db.dborm import OrmAsync
+from fastapi_accelerator.utils import SingletonMeta
 
 
 class BaseDatabaseManager(metaclass=SingletonMeta):
@@ -31,7 +31,7 @@ class BaseDatabaseManager(metaclass=SingletonMeta):
         self.adatabase_url = None
         self.aengine = None
         self.asession = None
-        self.aBase = None
+        self._aBase = None
         self.DEV_STATUS = None
 
     def get_session() -> Generator[Session, None, None]:
@@ -77,6 +77,19 @@ class DatabaseSyncSessionMixin(BaseDatabaseManager):
             session.close()
 
     @classmethod
+    def get_session_transaction(cls) -> Generator[Session, None, None]:
+        """Зависимость для получения сессии базы данных с транзакцией"""
+        session = cls.instance.session()
+        try:
+            with session.begin():
+                yield session
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            session.close()
+
+    @classmethod
     def get_metadata(cls) -> MetaData:
         """Получаем обновленные метаданные"""
         metadata = MetaData()
@@ -85,7 +98,7 @@ class DatabaseSyncSessionMixin(BaseDatabaseManager):
 
     @classmethod
     def create_all(cls):
-        """Создать все таблицы"""
+        """Создать все таблицы в БД"""
         cls.instance.check_dev()
         cls.instance.Base.metadata.create_all(bind=cls.instance.engine)
 
@@ -99,7 +112,7 @@ class DatabaseSyncSessionMixin(BaseDatabaseManager):
     def clear_all(cls, exclude_tables_name: list[str] = None):
         """Отчистить данные во всех таблицах
 
-        exclude_tables_name: Список имён таблиц которые не нужно отчистить
+        exclude_tables_name: Список имён таблиц которые не нужно отчищать
         """
         cls.instance.check_dev()
         with cls.instance.session() as session:
@@ -127,7 +140,7 @@ class DatabaseAsyncSessionMixin(BaseDatabaseManager):
 
     @classmethod
     async def aget_orm(cls) -> AsyncGenerator[OrmAsync, None]:
-        """Зависимость для получения сессии базы данных
+        """Зависимость для получения сессии базы данных с транзакцией
 
         Получить сессию:
 
@@ -155,7 +168,15 @@ class DatabaseAsyncSessionMixin(BaseDatabaseManager):
         cls.instance.check_dev()
         async with cls.instance.aengine.begin() as aconn:
             # await conn.run_sync(Base.metadata.drop_all)
-            await aconn.run_sync(cls.instance.aBase.metadata.create_all)
+            await aconn.run_sync(cls.instance._aBase.metadata.create_all)
+
+    @classmethod
+    async def dispose(cls):
+        """Метод dispose() закрывает все неиспользуемые соединения
+        в пуле соединений, связанном с данным engine.
+        Это позволяет освободить ресурсы базы данных, когда они больше не нужны
+        """
+        await cls.instance.aengine.dispose()
 
 
 class MainDatabaseManager(DatabaseSyncSessionMixin, DatabaseAsyncSessionMixin):
@@ -200,6 +221,6 @@ class MainDatabaseManager(DatabaseSyncSessionMixin, DatabaseAsyncSessionMixin):
             autocommit=False,
             autoflush=False,
         )
-        self.aBase = declarative_base()
+        self._aBase = declarative_base()
         # Некоторые действия разрешены только в DEV режиме
         self.DEV_STATUS = DEV_STATUS

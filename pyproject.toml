@@ -1,39 +1,52 @@
 [tool.poetry]
-name = "fastapi-accelerator"
-version = "0.1.0"
-description = ""
-authors = ["Denis Kustov pro-progerkustov@yandex.ru"]
-readme = "fastapi-accelerator/README.md"
-license = "Apache-2.0"
-homepage = "https://github.com/______"
-repository = "https://github.com/______"
-keywords = ["fastapi", "Django"]
+name = "fastapi_accelerator"
+version = "0.0.4"
+description = "Ускоритель разработки для FastAPI, предоставляющий готовые решения и инструменты для быстрого создания веб-приложений"
+authors = ["Denis Kustov <pro-progerkustov@yandex.ru>"]
+readme = "README.md"
+license = "MIT"
+homepage = "https://github.com/denisxab/fastapi-accelerator"
+repository = "https://github.com/denisxab/fastapi-accelerator"
+keywords = ["fastapi", "django", "web-framework", "api", "rest", "async", "sqlalchemy", "admin-panel"]
 exclude = [
-    "fastapi-accelerator/.idea",
-    "fastapi-accelerator/venv",
-    "fastapi-accelerator/.git",
-    "fastapi-accelerator/.gitignore",
+    "fastapi_accelerator/.idea",
+    "fastapi_accelerator/venv",
+    "fastapi_accelerator/.git",
+    "fastapi_accelerator/.gitignore",
+]
+include = ["README.md"]
+packages = [{include = "fastapi_accelerator"}]
+classifiers = [
+    "Framework :: FastAPI",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.11"
-fastapi = "^0.112.2"
-uvicorn = "^0.30.6"
-sqlalchemy = "^2.0.32"
-asyncpg = "^0.29.0"
-psycopg2-binary = "^2.9.9"
-redis = {extras = ["asyncio"], version = "^5.0.8"}
-pytz = "^2024.1"
-alembic = "^1.13.2"
-flask-admin = "^1.6.1"
-pyjwt = "^2.9.0"
-python-multipart = "^0.0.9"
+python = ">=3.9"
+fastapi = ">=0.112.2"
+uvicorn = ">=0.30.6"
+sqlalchemy = ">=2.0.32"
+asyncpg = ">=0.29.0"
+psycopg2-binary = ">=2.9.9"
+redis = {extras = ["asyncio"], version = ">=5.0.8"}
+pytz = ">=2024.1"
+alembic = ">=1.13.2"
+flask-admin = ">=1.6.1"
+pyjwt = ">=2.9.0"
+python-multipart = ">=0.0.9"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.2"
-pytest-asyncio = "^0.23.8"
-httpx = "^0.27.0"
-sqlalchemy-utils = "^0.41.2"
+pytest = ">=8.3.2"
+pytest-asyncio = ">=0.23.8"
+httpx = ">=0.27.0"
+sqlalchemy-utils = ">=0.41.2"
 
 [build-system]
 requires = ["poetry-core"]

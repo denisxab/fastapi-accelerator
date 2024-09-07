@@ -1,7 +1,7 @@
 from functools import wraps
 
-from common.auth_jwt import BaseAuthJWT
-from common.testutils.fixture_base import SettingTest
+from fastapi_accelerator.auth_jwt import BaseAuthJWT
+from fastapi_accelerator.testutils.fixture_base import SettingTest
 
 
 def client_auth_jwt(username: str = None):

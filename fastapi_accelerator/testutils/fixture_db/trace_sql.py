@@ -5,7 +5,7 @@ from typing import Generator, NamedTuple
 
 from sqlalchemy import event
 
-from common.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
 
 
 class TrackerNameTuple(NamedTuple):

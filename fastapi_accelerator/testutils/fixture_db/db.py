@@ -1,5 +1,6 @@
 """Модуль для работы с тестовой РСУБД"""
 
+import asyncio
 from typing import Any, Generator
 
 import pytest
@@ -10,8 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.orm import Session
 from sqlalchemy_utils import create_database, database_exists
 
-from common.db.dbsession import MainDatabaseManager
-from common.testutils.fixture_base import SettingTest
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.testutils.fixture_base import SettingTest
 
 
 @pytest.fixture(scope="session")
@@ -70,6 +71,11 @@ def common_client() -> Generator[TestClient, None, None]:
         yield test_client
 
 
+def run_async(coro):
+    """Синхронная обертка для асинхронного вызова"""
+    return asyncio.get_event_loop().run_until_complete(coro)
+
+
 @pytest.fixture(scope="function")
 def common_clean_table(common_setup_database) -> Generator:
     """Отчистка данных в таблицах, выполняется после каждого теста."""
@@ -78,6 +84,8 @@ def common_clean_table(common_setup_database) -> Generator:
     finally:
         # Отчистить данные в таблицах
         SettingTest.instance.DatabaseManager.clear_all(["alembic_version"])
+        # Синхронный вызов асинхронного метода dispose()
+        run_async(SettingTest.instance.DatabaseManager.dispose())
 
 
 @pytest.fixture(scope="function")

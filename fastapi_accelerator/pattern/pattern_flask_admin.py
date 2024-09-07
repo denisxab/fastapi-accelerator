@@ -8,7 +8,7 @@ from flask import Flask, Response, make_response, redirect, request, url_for
 from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 
-from common.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
 
 
 class AuthView:
@@ -96,7 +96,7 @@ def base_pattern(
     from app.core.config import ADMIN_PASSWORD, ADMIN_USERNAME, SECRET_KEY
     from app.core.db import DatabaseManager
     from app.models import File, User
-    from common.pattern.pattern_flask_admin import base_pattern
+    from fastapi_accelerator.pattern.pattern_flask_admin import base_pattern
 
     app = Flask(__name__)
 

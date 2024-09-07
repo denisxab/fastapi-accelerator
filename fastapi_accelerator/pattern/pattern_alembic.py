@@ -2,9 +2,9 @@
 # access to the values within the .ini file in use.
 
 from typing import Type
-from common.db.dborm import T
-from common.db.dbsession import MainDatabaseManager
-from common.utils import SingletonMeta
+from fastapi_accelerator.db.dborm import T
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.utils import SingletonMeta
 from alembic import context
 from logging.config import fileConfig
 
@@ -35,7 +35,7 @@ class AlembicEnv(metaclass=SingletonMeta):
     # > ! Импортировать модели которые нужно отлеживать
     from app.models import *  # noqa F401
 
-    from common.pattern.pattern_alembic import AlembicEnv
+    from fastapi_accelerator.pattern.pattern_alembic import AlembicEnv
 
     # Преднастоенная логика для создания и выполнения миграций чрез Alembic
     AlembicEnv(DatabaseManager).run()

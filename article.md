@@ -30,7 +30,7 @@
 Давайте рассмотрим основные компоненты нашего инструментария:
 
 ```bash
-common/
+fastapi_accelerator/
 ├── db/             # Логика взаимодействия с РСУБД
 ├── pattern/        # Шаблоны для проектов
 ├── testutils/      # Утилиты для тестирования FastAPI
@@ -103,7 +103,7 @@ common/
 │       ├── items_v1.py   # Тестовые записи для БД
 │       └── utils.py      # Переиспользуемые фикстуры для тестов
 │
-├── common/               # Submodule для переиспользовать
+├── fastapi_accelerator/               # Submodule для переиспользовать
 │
 ├── alembic/              # Директория для миграций базы данных.
 │   ├── versions/         # Папка с миграциями
@@ -145,9 +145,9 @@ common/
 
 ```python
 from fastapi import FastAPI
-from common.pattern.pattern_fastapi import base_pattern
+from fastapi_accelerator.pattern.pattern_fastapi import base_pattern
 from app.core.config import BASE_DIR_PROJECT, DEBUG, SECRET_KEY
-from common.timezone import moscow_tz
+from fastapi_accelerator.timezone import moscow_tz
 from app.core.db import DatabaseManager
 from app.core.security import AuthJWT
 
@@ -186,23 +186,76 @@ AuthJWT.mount_auth(app)
 
 ### DatabaseManager
 
-`DatabaseManager` - это универсальный инструмент для работы с РСУБД, предоставляющий как синхронные, так и асинхронные методы. Он использует паттерн одиночки для эффективного управления подключениями к базе данных.
+`DatabaseManager` - это универсальный инструмент для работы с РСУБД, предоставляющий как синхронные, так и асинхронные(название начинается на `a`) методы. `DatabaseManager` использует патер одиночка, поэтому может быть легко подменен в тестах.
 
 Пример использования:
 
 ```python
 from app.core.config import DATABASE_URL, DEBUG, DEV_STATUS
-from common.dbsession import MainDatabaseManager
+from fastapi_accelerator.dbsession import MainDatabaseManager
 
 DatabaseManager = MainDatabaseManager(DATABASE_URL, echo=DEBUG, DEV_STATUS=DEV_STATUS)
 ```
+
+-   Общие характеристики
+
+    -   `DEV_STATUS` - Индикатор режима разработки. При `DEV_STATUS=False` блокирует выполнение критических операций (`create_all`, `drop_all`, `clear_all`). Это мера безопасности для производственной среды.
+
+-   Синхронные компоненты
+
+    -   `database_url` - Адрес для подключения к синхронной базе данных.
+    -   `engine` - Механизм синхронного взаимодействия с БД.
+    -   `session` - Генератор синхронных сессий.
+    -   `Base` - Базовый класс для моделей данных.
+
+    -   Функциональность:
+
+        -   `get_session` - Инжектор сессии БД.
+        -   `get_session_transaction` - Инжектор сессии БД с поддержкой транзакций.
+        -   `create_all` - Инициализация всех таблиц в БД.
+        -   `drop_all` - Удаление всей структуры БД.
+        -   `clear_all` - Очистка содержимого таблиц. Параметр `exclude_tables_name` позволяет исключить определенные таблицы из процесса очистки.
+
+-   Асинхронные компоненты
+
+    -   `adatabase_url` - Адрес для подключения к асинхронной БД.
+    -   `aengine` - Асинхронный механизм работы с БД, включая пул соединений.
+    -   `asession` - Генератор асинхронных сессий.
+
+    -   Функциональность:
+
+        -   `aget_session` - Асинхронный инжектор сессии БД.
+        -   `aget_session_transaction` - Асинхронный инжектор сессии БД с поддержкой транзакций.
+
+### OrmAsync
+
+Этот класс оптимизирует асинхронное взаимодействие с БД:
+
+-   `get` - Извлечение объекта по заданным критериям.
+-   `get_list` - Получение набора объектов по запросу. (С возможностью глубокой выборки)
+-   `update` - Модификация объектов согласно запросу.
+-   `delete` - Удаление объектов по заданным параметрам.
+-   `get_item` - Извлечение объекта по первичному ключу. (С возможностью глубокой выборки)
+-   `create_item` - Создание нового объекта. (С возможностью каскадного создания)
+-   `update_item` - Обновление объекта по первичному ключу. (С возможностью каскадного обновления)
+-   `delete_item` - Удаление объекта по первичному ключу. (С возможностью каскадного удаления)
+
+> Глубокая выборка/каскадные операции - это возможность работы со связанными данными.
+> Активируется параметром `deep=True`
+>
+> Примеры:
+>
+> -   get_list, get_item - Возвращают объекты со всеми связанными данными, готовые для использования в Pydantic
+> -   create_item - Создает записи в связанных таблицах
+> -   update_item - Обновляет данные в связанных таблицах
+> -   delete_item - Удаляет записи из связанных таблиц
 
 ### ViewSet
 
 ViewSet позволяет быстро создавать CRUD-операции для моделей. Вот пример использования:
 
 ```python
-from common.viewset import AppOrm, FullViewSet
+from fastapi_accelerator.viewset import AppOrm, FullViewSet
 from fastapi import APIRouter, Depends, Query
 
 from app.api.v1.schemas.timemeasurement import TaskExecution
@@ -271,7 +324,7 @@ router.views = [
 Для защиты API-эндпоинтов мы используем JWT-аутентификацию:
 
 ```python
-from common.auth_jwt import BaseAuthJWT
+from fastapi_accelerator.auth_jwt import BaseAuthJWT
 
 class AuthJWT(BaseAuthJWT):
     def check_auth(username: str, password: str) -> bool:
@@ -284,7 +337,7 @@ AuthJWT.mount_auth(app)
 Пример защиты API метода:
 
 ```python
-from common.auth_jwt import jwt_auth
+from fastapi_accelerator.auth_jwt import jwt_auth
 
 @app.get("/check_protected", summary="Проверить аутентификацию по JWT")
 async def protected_route(jwt: dict = Depends(jwt_auth)):
@@ -301,7 +354,7 @@ from flask import Flask
 from app.core.config import ADMIN_PASSWORD, ADMIN_USERNAME, SECRET_KEY
 from app.db.base import DatabaseManager
 from app.models import File, User
-from common.pattern_flask_admin import base_pattern
+from fastapi_accelerator.pattern_flask_admin import base_pattern
 
 app = Flask(__name__)
 
@@ -341,8 +394,8 @@ from typing import Callable, NamedTuple
 from fastapi.testclient import TestClient
 
 from app.fixture.items_v1 import export_fixture_file
-from common.db.dbsession import MainDatabaseManager
-from common.testutils import apply_fixture_db, client_auth_jwt, track_queries, check_response_json
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.testutils import apply_fixture_db, client_auth_jwt, track_queries, check_response_json
 
 
 # Аутентифицировать тестового клиента
@@ -377,11 +430,11 @@ from typing import Callable, NamedTuple
 from fastapi.testclient import TestClient
 
 from app.fixture.items_v1 import export_fixture_file
-from common.db.dbsession import MainDatabaseManager
-from common.testutils import apply_fixture_db
-from common.testutils.fixture_auth import client_auth_jwt
-from common.testutils.fixture_db.trace_sql import track_queries
-from common.testutils.utils import BaseAuthJwtPytest, check_response_json
+from fastapi_accelerator.db.dbsession import MainDatabaseManager
+from fastapi_accelerator.testutils import apply_fixture_db
+from fastapi_accelerator.testutils.fixture_auth import client_auth_jwt
+from fastapi_accelerator.testutils.fixture_db.trace_sql import track_queries
+from fastapi_accelerator.testutils.utils import BaseAuthJwtPytest, check_response_json
 
 BASE_URL_V1 = "/api/v1/"
 
