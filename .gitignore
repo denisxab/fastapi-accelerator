@@ -1,0 +1,8 @@
+__pycache__
+log
+venv
+/html
+.vscode
+/dist
+/app/core/settings_local.py
+.pytest_cache
