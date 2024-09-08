@@ -45,6 +45,7 @@ fastapi_accelerator/
 ├── middleware.py    # Middleware компоненты
 ├── paginator.py     # Реализация пагинации
 ├── timezone.py      # Работа с временными зонами
+├── appstate.py      # Получить один раз настройки проекта во время Runtime
 ├── viewset.py       # Реализация ViewSet
 ├── utils.py         # Общие утилиты
 ├── README.md        # Документация
@@ -657,9 +658,12 @@ router.views = [
 from fastapi_accelerator.timezone import get_datetime_now
 
 # Вариант 1
-get_datetime_now(request.app).isoformat()
+get_datetime_now(request.app.state.TIMEZONE).isoformat()
 # Вариант 2
-get_datetime_now(app).isoformat()
+get_datetime_now(app.state.TIMEZONE).isoformat()
+# Вариант 3
+import pytz
+get_datetime_now(pytz.timezone("Europe/Moscow")).isoformat()
 ```
 
 ## Use HTTPException
@@ -736,7 +740,7 @@ admin = base_pattern(
     ADMIN_USERNAME,
     # > Модели которые нужны в админ панели
     models=[User, File],
-    database_manager_sync=DatabaseManager,
+    database_manager=DatabaseManager,
 )
 
 
@@ -1388,3 +1392,22 @@ class TestTaskExecution2(BasePytest):
             },
         )
 ```
+
+# Планы развития
+
+-   Добавить логику для интеграций с другими API, сделать это структурировано. Добавить линтеры для интеграций
+-   Добавить шаблонизатор проекта
+
+---
+
+-   Обеспечить совместимость с последними(прошлыми) версиями FastAPI и связанных библиотек
+-   Значительно увеличить покрытие кода тестами
+-   Оптимизировать существующий код для повышения производительности
+-   Провести нагрузочное тестирование и оптимизировать критические участки кода
+-   Провести рефакторинг с учетом лучших практик и паттернов проектирования
+-   Разработать и добавить аналогичный вариант для работы с `WebSocket`
+-   Усовершенствовать механизм выполнения фоновых задач (`background tasks`)
+-   Улучшить реализацию периодических задач, подобных тем, что представлены в `fastapi-utils`
+-   Создать несколько детальных примеров проектов, демонстрирующих различные сценарии использования
+-   Расширить документацию, добавив больше практических руководств и рекомендаций по применению
+-   Исследовать возможности интеграции с популярными инструментами экосистемы FastAPI

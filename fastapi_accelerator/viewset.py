@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.orm import class_mapper
 
+from fastapi_accelerator.appstate import DATABASE_MANAGER
 from fastapi_accelerator.cache import BaseCache, cache_redis
 from fastapi_accelerator.db import MainDatabaseManager, OrmAsync
 from fastapi_accelerator.db.dborm import SQL_TO_PYTHON_TYPE, T, deep_instance, get_pk
@@ -27,16 +28,15 @@ class BaseViewSet(abc.ABC):
 
 
 class AppOrm:
-    """Брать методы получения сесси из настроек APP DATABASE_MANAGER"""
-
-    database_manager: MainDatabaseManager = None
+    """Брать методы получения сессии из настроек APP DATABASE_MANAGER"""
 
     @classmethod
     async def aget_orm(cls, request: Request):
         """Метод получения сессии берем из настоек APP"""
-        if not cls.database_manager:
-            cls.database_manager = request.app.state.DATABASE_MANAGER
-        async for orm in cls.database_manager.aget_orm():
+        database_manager: MainDatabaseManager = DATABASE_MANAGER() or DATABASE_MANAGER(
+            request.app
+        )
+        async for orm in database_manager.aget_orm():
             yield orm
 
 
