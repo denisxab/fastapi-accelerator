@@ -736,7 +736,7 @@ admin = base_pattern(
     ADMIN_USERNAME,
     # > Модели которые нужны в админ панели
     models=[User, File],
-    database_manager_sync=DatabaseManager,
+    database_manager=DatabaseManager,
 )
 
 
