@@ -31,7 +31,6 @@ FastAPI Accelerator - это open-source инструментарий, созд�
 3. Внедрения универсального менеджера для работы с РСУБД.
 4. Реализации ViewSet для быстрого создания представлений с базовой бизнес-логикой.
 5. Интеграции аутентификации по JWT.
-6. Добавления удобной админ-панели.
 7. Упрощения написания и выполнения интеграционных тестов для API.
 8. Оптимизации работы с Alembic для управления миграциями в production и test окружениях.
 
@@ -358,37 +357,6 @@ async def protected_route(jwt: dict = Depends(jwt_auth)):
     return {"message": "This is a protected route", "user": jwt}
 ```
 
-### Админ-панель
-
-Для удобного управления данными мы интегрировали Flask-Admin:
-
-```python
-from flask import Flask
-
-from app.core.config import ADMIN_PASSWORD, ADMIN_USERNAME, SECRET_KEY
-from app.db.base import DatabaseManager
-from app.models import File, User
-from fastapi_accelerator.pattern_flask_admin import base_pattern
-
-app = Flask(__name__)
-
-admin = base_pattern(
-    app,
-    SECRET_KEY,
-    ADMIN_PASSWORD,
-    ADMIN_USERNAME,
-    # > Модели которые нужны в админ панели
-    models=[User, File],
-    database_manager=DatabaseManager,
-)
-
-if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=8001,
-        debug=True,
-    )
-```
 
 ## Тестирование
 
