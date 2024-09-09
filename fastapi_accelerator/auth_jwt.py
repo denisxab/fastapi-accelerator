@@ -9,6 +9,8 @@ from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from pydantic import BaseModel
 
+from fastapi_accelerator.appstate import AUTH_JWT
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
@@ -121,7 +123,8 @@ class BaseAuthJWT:
 
 def jwt_auth(request: Request, token: str = Depends(oauth2_scheme)) -> dict:
     """Depends для проверки JWT"""
-    payload = request.app.state.auth_jwt._verify_token(token)
+    auth_jwt: BaseAuthJWT = AUTH_JWT() or AUTH_JWT(request.app)
+    payload = auth_jwt._verify_token(token)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

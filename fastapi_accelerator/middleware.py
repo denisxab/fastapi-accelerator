@@ -3,6 +3,8 @@ import time
 
 from fastapi import Request
 
+from fastapi_accelerator.appstate import DEBUG
+
 
 def request_log_format(
     request: Request, status_code: int, process_time: float = None
@@ -32,7 +34,9 @@ async def log_request_response(request: Request, call_next):
     start_time = time.perf_counter()
     response = await call_next(request)
     process_time = (time.perf_counter() - start_time) * 1000
-    if request.app.debug:
+
+    debug = DEBUG() or DEBUG(request.app)
+    if debug:
         logger = logging.getLogger("uvicorn")
         logger.info(request_log_format(request, response.status_code, process_time))
     response.headers["X-Process-Time"] = f"{process_time:.2f} ms"

@@ -2,8 +2,8 @@
 Работа с кеш Redis
 """
 
-from datetime import timedelta
 import json
+from datetime import timedelta
 from functools import wraps
 from typing import Any
 
@@ -11,6 +11,8 @@ from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from redis import Redis
+
+from fastapi_accelerator.appstate import CACHE_STATUS
 
 
 class BaseCache:
@@ -25,7 +27,15 @@ class BaseRedis(BaseCache, Redis):
 
 def cache_redis(cache_class: BaseCache, cache_ttl: timedelta, cache: bool = True):
     """
-    Пример использования:
+    Декоратор для кеширования ответов API в Redis.
+
+    Args:
+        cache_class: Класс кеша для взаимодействия с Redis.
+        cache_ttl: Время жизни кеша.
+        cache: Флаг, включающий или отключающий кеширование.
+
+    Returns:
+        Callable: Декоратор функции.
 
     class ViewSetRetrieve(BaseViewSet):
         def register_routes(self):
@@ -45,38 +55,32 @@ def cache_redis(cache_class: BaseCache, cache_ttl: timedelta, cache: bool = True
 
             return get_item
     """
-    # Глобальный статус кеширования
-    CACHE_STATUS = None
 
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
-            nonlocal CACHE_STATUS
             request: Request = kwargs["request"]
 
-            if CACHE_STATUS is None:
-                CACHE_STATUS = request.app.state.CACHE_STATUS
-            if not CACHE_STATUS:
+            cache_status = CACHE_STATUS() or CACHE_STATUS(request.app)
+
+            if not cache_status or not cache:
                 # кеш отключен
                 return await func(*args, **kwargs)
 
             key_cache: str = f"{request.url.path}?{request.url.query}"
-            if cache:
-                cache_response = await cache_class.get(key_cache)
-                if cache_response:
-                    # Создаем ответ с заголовком, указывающим, что данные из кеша
-                    return JSONResponse(
-                        content=json.loads(cache_response), headers={"X-Cache": "HIT"}
-                    )
+            cache_response = await cache_class.get(key_cache)
+            if cache_response:
+                # Создаем ответ с заголовком, указывающим, что данные из кеша
+                return JSONResponse(
+                    content=json.loads(cache_response), headers={"X-Cache": "HIT"}
+                )
 
             response = await func(*args, **kwargs)
 
-            if cache:
-                json_data = jsonable_encoder(response)
-                await cache_class.set(key_cache, json.dumps(json_data), ex=cache_ttl)
-                # Возвращаем результат с заголовком
-                return JSONResponse(content=json_data, headers={"X-Cache": "MISS"})
-            return response
+            json_data = jsonable_encoder(response)
+            await cache_class.set(key_cache, json.dumps(json_data), ex=cache_ttl)
+            # Возвращаем результат с заголовком
+            return JSONResponse(content=json_data, headers={"X-Cache": "MISS"})
 
         return wrapper
 

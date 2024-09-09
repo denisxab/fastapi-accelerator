@@ -45,6 +45,7 @@ fastapi_accelerator/
 ├── middleware.py    # Middleware компоненты
 ├── paginator.py     # Реализация пагинации
 ├── timezone.py      # Работа с временными зонами
+├── appstate.py      # Получить один раз настройки проекта во время Runtime 
 ├── viewset.py       # Реализация ViewSet
 ├── utils.py         # Общие утилиты
 ├── README.md        # Документация
@@ -657,9 +658,12 @@ router.views = [
 from fastapi_accelerator.timezone import get_datetime_now
 
 # Вариант 1
-get_datetime_now(request.app).isoformat()
+get_datetime_now(request.app.state.TIMEZONE).isoformat()
 # Вариант 2
-get_datetime_now(app).isoformat()
+get_datetime_now(app.state.TIMEZONE).isoformat()
+# Вариант 3
+import pytz
+get_datetime_now(pytz.timezone("Europe/Moscow")).isoformat()
 ```
 
 ## Use HTTPException
