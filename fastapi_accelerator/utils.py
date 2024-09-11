@@ -1,3 +1,7 @@
+from collections import namedtuple
+from typing import Any, NamedTuple
+
+
 class SingletonMeta(type):
     """Мета класс для реализации паттерна Одиночка"""
 
@@ -34,3 +38,15 @@ def singleton(func):
         return instance
 
     return wrapper
+
+
+class NoInstanceMeta(type):
+    """Нельзя создавать экземпляры этого класса"""
+
+    def __call__(cls, *args, **kwargs):
+        raise TypeError("You cannot create instances of this class")
+
+
+def to_namedtuple(**kwargs: dict[str, Any]) -> NamedTuple:
+    """Вернуть именованный кортеж"""
+    return namedtuple("CommonNameTuple", kwargs.keys())(**kwargs)

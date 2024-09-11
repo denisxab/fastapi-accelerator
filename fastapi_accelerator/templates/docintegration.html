@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration document</title>
+    <style>
+        :root {
+            --primary-color: #61dafb;
+            --secondary-color: #bb86fc;
+            --background-color: #121212;
+            --surface-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333333;
+            --method-get-color: #61affe;
+            --method-post-color: #49cc90;
+            --method-put-color: #fca130;
+            --method-delete-color: #f93e3e;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1460px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+        .integration {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .integration-header {
+            background-color: rgba(97, 218, 251, 0.1);
+            border-bottom: 1px solid var(--border-color);
+            padding: 10px 20px;
+        }
+        .integration-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+        .integration-content {
+            padding: 20px;
+        }
+        .integration-docstring {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+        .method {
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .method h3 {
+            font-size: 18px;
+            margin: 0 0 10px 0;
+            color: var(--secondary-color);
+        }
+        .method-info {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            background-color: rgba(97, 175, 254, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .method-info a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        .method-info a:hover {
+            text-decoration: underline;
+        }
+        .http-method {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 3px;
+            color: #000;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .http-method.get { background-color: var(--method-get-color); }
+        .http-method.post { background-color: var(--method-post-color); }
+        .http-method.put { background-color: var(--method-put-color); }
+        .http-method.delete { background-color: var(--method-delete-color); }
+        .annotations {
+            font-size: 14px;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+        .annotation-item {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .annotation-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        .return-annotation {
+            display: block;
+            overflow-wrap: break-word;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(97, 175, 254, 0.1);
+            border-left: 4px solid var(--secondary-color);
+        }
+        .method-path {
+            font-family: monospace;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Integration document</h1>
+        {% for class, info in integrations.items() %}
+        <div class="integration">
+            <div class="integration-header">
+                <h2>{{ class }}</h2>
+            </div>
+            <div class="integration-content">
+                <p class="integration-docstring">{{ info.docs.docstring }}</p>
+                {% for method in info.docs.methods %}
+                <div class="method">
+                    <h3>{{ method.name }}</h3>
+                    <p class="method-docstring">{{ method.docstring }}</p>
+                    <div class="method-info">            
+                        <span class="http-method {{ method.httpmethod.value.lower() }}">{{ method.httpmethod.value }}</span>
+                        <span class="method-path">{{ info.base_url }}{{ method.path }}</span>
+                        <p>
+                        Version: <strong>{{ method.version }}</strong><br>
+                        Docs: <a href="{{ method.docurl }}" target="_blank">{{ method.docurl }}</a>
+                        </p>
+                    </div>
+
+                    <div class="annotations">
+                        {% for param, annotation in method.annotations.items() %}
+                            {% if param != 'return' %}
+                            <div class="annotation-item">
+                                <span class="annotation-name">{{ param }}:</span> {{ annotation }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% if 'return' in method.annotations %}
+                    <div class="return-annotation">
+                        <span class="annotation-name">return:</span> {{ method.annotations['return'] }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

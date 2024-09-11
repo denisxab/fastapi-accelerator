@@ -17,16 +17,26 @@
 ```bash
 fastapi_accelerator/
 │
-├── db                  # Логика взаимодействия с РСУБД
+├── db/                         # Логика взаимодействия с РСУБД
 │   ├── __init__.py
 │   ├── dborm.py
 │   └── dbsession.py
 │
-├── pattern                     # Шаблоны для проектов
+├── pattern/                    # Шаблоны для проектов
 │   ├── __init__.py
 │   ├── pattern_fastapi.py      # Шаблоны для создания проекта на FastAPI
 │   ├── pattern_alembic.py      # Шаблоны для создания Alembic
 │   └── pattern_flask_admin.py  # Шаблоны для создания проекта Flask админ панели
+│
+├── integration/                # Утилиты интеграций с внешними системами
+│   ├── __init__.py
+│   ├── base_integration.py     # Базовый класс для всех типов интеграций
+│   ├── http_integration.py     # Интеграции по HTTP
+│   └── stability_patterns.py   # Реализация паттернов стабильности
+│
+├── commands/                   # CLI команды
+│   ├── __init__.py
+│   └── py2dantic               # Генерация схемы pydantic из python dict
 │
 ├── testutils                   # Утилиты для тестирования FastAPI
 │   ├── __init__.py
@@ -217,7 +227,8 @@ ADMIN_PASSWORD = "password"
 │   │   ├── security.py         # Логика безопасности проекта
 │   │   ├── db.py               # Настройки и сессии базы данных.
 │   │   ├── cache.py            # Настройки кеширования
-│   │   └── dependencies.py
+│   │   ├── useintegration.py   # Используемые интеграции в проекте
+│   │   └── dependencies.py     # Общие зависимости для проекта
 │   │
 │   ├── api/                    # Содержит все API эндпоинты, разделенные по версиям.
 │   │   ├── __init__.py
@@ -255,6 +266,13 @@ ADMIN_PASSWORD = "password"
 │   │    ├── __init__.py
 │   │    ├── user.py
 │   │    └── item.py
+│   │
+│   ├── integration/            # Интеграции с внешними сервисами
+│   │    ├── __init__.py
+│   │    └── google_translate/  # Пример пакета интеграции с Google переводчик(он может быть подключен как git submodule)
+│   │        ├── __init__.py
+│   │        ├── schema.py      # Сдержит схемы запросов и ответов
+│   │        └── view.py        # Сдержит логику интеграций
 │   │
 │   └── fixture/          # Хранит фикстуры для тестирования этого проекта
 │       ├── __init__.py
@@ -491,18 +509,19 @@ file_template = %%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(re
 ```
 
 > Важный аспект поиска миграций
+>
 > Нужно чтобы модели быть импортированы в `alembic/env.py` чтобы эти модели записали свои данные в `Base.metadata`
 >
-> Поэтому:
+> Поэтому нужно:
 >
-> 1. В `app.models.__init__.py` импортировать все модели
+> 1. В `app.models.__init__.py` импортируем все модели
 >
 > ```python
 > from .files import *
 > from .users import *
 > ```
 >
-> 2. Нужно в `alembic/env.py` импортировать все модели
+> 2. В `alembic/env.py` импортировать все(или только конкретные) модели
 >
 > ```python
 > from app.models import *
@@ -511,7 +530,9 @@ file_template = %%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(re
 5. Создавайте миграции и применяйте их
 
 ```bash
+# Создавайте миграцию
 alembic revision --autogenerate
+# Применить миграцию к БД
 alembic upgrade head
 ```
 
@@ -618,7 +639,7 @@ class UserViewSet(FullViewSet):
             aorm: OrmAsync = Depends(AppOrm.aget_orm),
         ) -> List[self.pydantic_model]:
             return await aorm.get_list(
-                select(self.db_model).offset(skip).limit(limit), deep=self.deep_schema
+                self.db_model, select(self.db_model).offset(skip).limit(limit), deep=self.deep_schema
             )
         return get_list_items
 
@@ -643,6 +664,7 @@ class TaskExecutionViewSet(FullViewSet):
     # Включить защиту через JWT
     dependencies = [Depends(jwt_auth)]
 
+# Подключить ViewSet
 router.views = [
     FileViewSet().as_view(router, prefix="/file"),
     UserViewSet().as_view(router, prefix="/user"),
@@ -712,6 +734,348 @@ from fastapi_accelerator.auth_jwt import jwt_auth
 async def protected_route(jwt: dict = Depends(jwt_auth)):
     return {"message": "This is a protected route", "user": jwt}
 ```
+
+## Use Integration
+
+Большинство API-сервисов взаимодействуют с другими API или gRPC/RPC сервисами. Такие интеграции могут быть сложными и часто оказываются не полностью понятно разработчикам. Из-за этого они легко превращаются в легаси-код, который сложно поддерживать, а тестирование интеграций локально зачастую невозможно.
+
+Важно, чтобы в проекте была библиотека, следящая за качеством написания интеграций и заставляющая документировать их для упрощения дальнейшей поддержки. Именно для этого я разработал специальные модули:
+
+-   `IntegrationHTTP`: Класс для создания интеграций по HTTP.
+-   `Stability Patterns`: Паттернов стабильности для применения к методам интеграции.
+-   `py2dantic`: Утилита для перевода Python dict в Pydantic схему.
+-   `docintegration`: Авто генерация документации, для используемых интеграций.
+
+### Use Integration HTTP
+
+`IntegrationHTTP` - Класс для создания методов интеграции по HTTP, централизует логику вызовов к внешним системам, проводя валидацию исходящих данных. Также в классе указывается версия и документация внешнего API.
+
+Преимущества использования этого подхода:
+
+-   Явная спецификация форматов запроса и ответа.
+-   Легкая переносимость кода между проектами — достаточно импортировать классы, основанные на `IntegrationHTTP`.
+-   Консолидация логики внешних запросов в одном месте, что упрощает поддержку.
+-   Возможность легко заменять реальные методы на `mock` для тестирования.
+-   Легкое внедрение `Stability Patterns` для методов интеграции.
+
+Для создания интеграции следуйте следующим шагам:
+
+1.  Рекомендуется располагать код интеграций в директории `app/integration/ИмяПакетаИнтеграции`.
+2.  Создать класса интеграций `app/integration/ИмяПакетаИнтеграции/endpoint.py`:
+
+    ```python
+    import httpx
+    from pydantic import BaseModel
+
+    from fastapi_accelerator.integration.http_integration import (
+        ApiHTTP,
+        EndpointsDeclaration,
+        HTTPMethod,
+        IntegrationHTTP,
+    )
+    from fastapi_accelerator.integration.stability_patterns import sp
+
+    class ИмяIntegration(EndpointsDeclaration):
+
+        integration = IntegrationHTTP(
+            "Имя Интеграции",
+            doc="Интеграция с ... API",
+        )
+
+        class Schema:
+            """Схемы Pydantic для успешных ответов"""
+
+            class Successful(BaseModel)
+                body: str
+
+        class SchemaError:
+            """Схемы Pydantic для не успешных ответов"""
+
+            class http400(BaseModel)
+                error: str
+
+        @integration.endpoint(
+            HTTPMethod.post,
+            "/путь",
+            version="...",
+            docurl="https://..."
+        )
+        @sp.RetryPattern()
+        async def имя_метода(api: ApiHTTP, аргумент_1: str) -> Schema.Successful | SchemaError.http400:
+            try:
+                response: httpx.Response = await api.client.post(api.url.geturl(), json=...)
+                return response.json()
+            except httpx.RequestError as e:
+                raise e
+    ```
+
+3.  Настроить и подключить интеграции к проекту `app/core/useintegration.py`:
+
+    ```python
+    """Интеграции используемые в проекте"""
+
+    from app.integration.ИмяПакетаИнтеграции.endpoint import ИмяIntegration
+
+    # Создание экземпляра интеграции
+    имя_api = ИмяIntegration(
+        # Начало для url пути
+        base_url="https://путь...",
+        # Доступы, которые можем использовать в методах интеграции
+        credentials={...},
+    )
+    ```
+
+4.  Пример использования класса интеграции в `FastAPI`:
+
+    ```python
+    from app.core.useintegration import имя_api
+    from app.integration.ИмяПакетаИнтеграции.schema import ИмяSchema
+
+    @router.get("/имя")
+    async def имя(аргумент_1: str) -> ИмяIntegration.Schema.Successful:
+        # Вызвать метод интеграции
+        return await имя_api.имя_метода(аргумент_1)
+    ```
+
+---
+
+Вам необходимо указывать тип возвращаемого объекта из метода интеграции.
+
+Ответ может быть:
+
+-   `dict`: который можно конвертировать в одну схему `Pydantic`.
+-   `list[dict]`: который можно конвертировать в список схем `Pydantic`.
+-   Несколько типов ответа: Это необходимо для указания типа корректного ответа и для обработки ошибок. Например, `-> УспешныйОтвет | НеУспешныйОтвет` или `-> list[УспешныйОтвет] | НеУспешныйОтвет`.
+-   В худшем случае можете указать `Any`.
+
+#### Пример интеграции с Google Translate
+
+-   Класса интеграции `app/integration/google_translate/endpoint.py`:
+
+```python
+import httpx
+from pydantic import BaseModel
+
+from fastapi_accelerator.integration.http_integration import (
+    ApiHTTP,
+    EndpointsDeclaration,
+    HTTPMethod,
+    IntegrationHTTP,
+)
+from fastapi_accelerator.integration.stability_patterns import sp
+
+
+class GoogleTranslateEndpoints(EndpointsDeclaration):
+    integration = IntegrationHTTP(
+        "Google Translate",
+        doc="Интеграция с Google Translate API",
+    )
+
+    class Schema:
+        """Схемы для успешных ответов"""
+
+        class TranslateV2(BaseModel):
+            text: str
+
+    class SchemaError:
+        """Схемы для не успешных ответов"""
+
+        class http400Error(BaseModel):
+            code: int
+            message: str
+            errors: list[dict]
+            status: str
+            details: list[dict]
+
+        class http400(BaseModel):
+            error: dict
+
+    @integration.endpoint(
+        HTTPMethod.post,
+        "/v1/translateHtml",
+        version="v2",
+        docurl="https://cloud.google.com/translate/docs/reference/rest",
+    )
+    # Применяем паттерны стабильности
+    @sp.Timeout()
+    # Автоматически повторяет запрос при возникновении ошибки.
+    @sp.RetryPattern()
+    async def translate(
+        api: ApiHTTP,
+        text: str,
+        from_lang: str,
+        to_lang: str,
+    ) -> Schema.TranslateV2 | SchemaError.http400:  # Указать типа ответа
+        """Перевод текста с помощью Google Translate"""
+        try:
+            # Выполнить запрос к внешней системе
+            response: httpx.Response = await api.client.post(
+                api.url.geturl(),
+                json=[[text.split("\n"), from_lang, to_lang], "te_lib"],
+                headers={
+                    "content-type": "application/json+protobuf",
+                    "x-goog-api-key": api.credentials["API_TOKEN"],
+                },
+            )
+            # Обработка ответа
+            print(f"Processed {api.url}: Status {response.status_code}")
+            return {"text": "\n".join(x[0] for x in response.json())}
+        except httpx.RequestError as e:
+            print(f"Error processing {api.url}: {e}")
+            raise e
+```
+
+-   Подключение в `app/core/useintegration.py`:
+
+```python
+"""Интеграции используемые в проекте"""
+
+from app.integration.google_translate.endpoint import GoogleTranslateIntegration
+
+# Создание экземпляра интеграции
+gtapi = GoogleTranslateIntegration(
+    base_url="https://translate-pa.googleapis.com",
+    # Сохраняем в класс доступы, которые можем использовать в методах интеграции
+    credentials={"API_TOKEN": "..."},
+)
+```
+
+-   Пример использования в эндпоинте `FastAPI`:
+
+```python
+from datetime import timedelta
+from fastapi_accelerator.cache import cache_redis
+from app.core.cache import redis_client
+from app.core.useintegration import gtapi
+from app.integration.google_translate.schema import GoogleTranslateSchema
+
+@router.get("/translate")
+# Можем легко кешировать ответы от интеграций
+@cache_redis(cache_class=redis_client, cache_ttl=timedelta(minutes=10))
+async def translate(
+    text: str, from_lang: str = "en", to_lang: str = "ru"
+) -> GoogleTranslateEndpoints.Schema.TranslateV2:
+    # Вызвать метод интеграции
+    return await gtapi.translate(text, from_lang, to_lang)
+```
+
+### Use Stability Patterns
+
+Модуль поддерживает паттерны стабильности (Stability Patterns), которые помогают избежать ошибок и перегрузок при работе с внешними сервисами.
+
+> Основным критерием не успешного выполнения является возникновение исключения (raise) в методе интеграции. Если вы получили ответ с кодом 400 (ошибка клиента) или 500 (ошибка сервера), но не вызвали исключение, Stability Patterns будет считать это успешным выполнением и не применит свою логику для обработки ошибок.
+
+Ниже приведено описание основных декораторов:
+
+-   `@sp.Fallback` (Резервный вариант) - Предоставляет альтернативный путь выполнения в случае сбоя основного. Позволяет системе деградировать контролируемо, а не падать с ошибкой.
+-   `@sp.Timeout` (Тайм-аут) - Ограничивает время ожидания ответа от внешнего сервиса. Предотвращает блокировку ресурсов при зависании вызова.
+-   `@sp.CircuitBreaker` (Предохранитель) - Отслеживает количество ошибок при вызове внешнего сервиса. При превышении лимита временно блокирует вызов, предотвращая каскадные сбои.
+-   `@sp.RetryPattern` (Паттерн повторения) - Автоматически повторяет запрос при возникновении ошибки.
+-   `@sp.Throttling` (Регулирование) - Ограничивает количество запросов к ресурсу для предотвращения его перегрузки. Защищает систему от шторма запросов.
+
+Эти паттерны делают систему более устойчивой, минимизируя риск сбоев и обеспечивая плавную деградацию при возникновении проблем.
+
+### Use py2dantic
+
+`py2dantic` — это удобная утилита, которая позволяет быстро создавать схемы Pydantic из словарей Python. Эти схемы можно эффективно использовать для типизации в вашем проекте.
+
+-   Пример использования:
+
+```python
+from fastapi_accelerator.commands.py2dantic import generate_pydantic_models
+
+sample_data = {
+    "items": [
+        {
+            "id": "0000",
+            "premium": False,
+            "name": "Python Developer",
+            "department": None,
+            "has_test": True,
+            "response_letter_required": False,
+            "salary": None,
+            "type": {"id": "open", "name": "Открытая"},
+            "address": None,
+            "response_url": None,
+            "sort_point_distance": None,
+            "published_at": "2024-09-04T08:27:02+0300",
+            "created_at": "2024-09-04T08:27:02+0300",
+            "archived": False,
+            "apply_alternate_url": "https://hh.ru/applicant/vacancy_response?vacancyId=0000",
+            "branding": {"type": "MAKEUP", "tariff": None},
+            "show_logo_in_search": True
+        },
+    ],
+    "found": 187,
+    "pages": 2,
+    "page": 1,
+    "per_page": 100,
+    "clusters": None,
+    "arguments": None,
+    "fixes": None,
+    "suggests": None,
+    "alternate_url": "https://hh.ru/search/vacancy?enable_snippets=true&items_on_page=100&order_by=publication_time&page=1&salary=200000&schedule=remote&text=Python+FastAPI",
+}
+
+assert (
+    generate_pydantic_models(sample_data, depth=2, prfix_class_name="Job").strip()
+    == """
+class Job_ItemsItem(BaseModel):
+    id: str = None
+    premium: int = None
+    name: str = None
+    department: Any = None
+    has_test: int = None
+    response_letter_required: int = None
+    area: Dict = None
+    salary: Any = None
+    type: Dict = None
+    address: Any = None
+    response_url: Any = None
+    sort_point_distance: Any = None
+    published_at: str = None
+    created_at: str = None
+    archived: int = None
+    apply_alternate_url: str = None
+    branding: Dict = None
+    show_logo_in_search: int = None
+
+class Job(BaseModel):
+    items: List[Job_ItemsItem]
+    found: int = None
+    pages: int = None
+    page: int = None
+    per_page: int = None
+    clusters: Any = None
+    arguments: Any = None
+    fixes: Any = None
+    suggests: Any = None
+    alternate_url: str = None
+    """.strip()
+    )
+```
+
+### Use docintegration
+
+Данный функционал позволяет узнать, какие интеграции используются в проекте, аналогично тому, как это реализовано в OpenAPI Swagger для стандартного FastAPI.
+
+Документация доступна по адресу: `http://host:port/docintegration`.
+
+Чтобы активировать этот путь, необходимо в файле `main.py` в параметре `base_pattern` указать список интеграций в аргументе `useintegration`:
+
+```python
+from app.core.useintegration import интеграция_1, интеграция_2
+from fastapi_accelerator.pattern.pattern_fastapi import base_pattern
+
+# Паттерн для проекта
+base_pattern(
+    app,
+    ...
+    useintegration=[интеграция_1, интеграция_2],
+)
+```
+
+![Внешний вид документации](./__attach__/Screenshot_20240914_153330.png)
 
 ## Use Admin Panel
 
@@ -865,7 +1229,7 @@ SettingTest(TestDatabaseManager, app, alembic_migrate=True, keepdb=True) # noqa 
         - Если `True` -> Создаст таблицы через миграции `alembic`
         - Если `False` -> Создаст таблицы через `create_all()`
 
-    3. (after) После завершение всех тестов в зависимости от настройки `SettingTest.keepdb`;
+    3. (after) После завершение всех тестов, в зависимости от настройки `SettingTest.keepdb`;
         - Если `True` -> Ничего
         - Если `False` -> Удаляться все таблицы из тестовой БД
 
@@ -914,7 +1278,7 @@ class TestИмяКласса(BasePytest):
 
 ### Декоратор `@apply_fixture_db`
 
-Идея взята из `Django` в котором можно указать в атрибуте `fixtures` список файлов с фикстурами, которые будут загружены для тестов, и удалены после окончания. Этот очень удобно для переиспользовать тестовых данных.
+Идея взята из тестирования `Django`, в котором можно указать в атрибуте `fixtures` список файлов с фикстурами, которые будут загружены для тестов, и удалены после окончания. Этот очень удобно для переиспользовать тестовых данных.
 
 Но я решил модифицировать этот вариант и сделать фикстуры не в виде `JSON` а виде объектов `SqlAlchemy`. Использование `JSON` лучше когда нужно переносить эти данные на другие платформы, но такое встречается редко, чаще всего фикстуры для backend тестов используются только на backend, и горазда удобнее и быстрее писать в формате объектов БД, чем в формате `JSON`. Поэтому выбран формат объектов.
 
@@ -932,7 +1296,7 @@ class TestИмяКласса(BasePytest):
 -   Оформление файлами с тестовыми данными `app.fixture.items_v1.py`:
 
 ```python
-from fastapi_accelerator.testutils.utils import to_namedtuple
+from fastapi_accelerator.utils import to_namedtuple
 from app.models.timemeasurement import Task, TaskExecution, TaskUser
 
 def export_fixture_task():
@@ -995,7 +1359,7 @@ class TestИмяКласса(BasePytest):
 
 ### Контекстный менеджер `track_queries`
 
-Идея взята из `Django` метода `self.assertNumQueries`, который поваляет проверять количество выполненных SQL команд в контексте. Это очень полезно когда используется ORM, который может из за неаккуратного использования, генерировать сотни SQL команд. Поэтому лучше у каждого вызова тестового API метода отлеживать количество выполненных SQL команд.
+Идея взята из тестирования `Django` метода `self.assertNumQueries`, который поваляет проверять количество выполненных SQL команд в контексте. Это очень полезно когда используется ORM, который может из за неаккуратного использования, генерировать сотни SQL команд. Поэтому лучше у каждого вызова тестового API метода отлеживать количество выполненных SQL команд.
 
 -   Пример использования контекстного менеджера `track_queries`:
 
@@ -1119,6 +1483,74 @@ class TestИмяКласса(BaseAuthJwtPytest):
         print(client.headers['authorization']) # 'Bearer ...'
         ...
 ```
+
+## Тестирование интеграций с внешними API
+
+Самым сложным аспектом тестирования являются интеграции с внешними API, поскольку во время тестов необходимо избегать выполнения реальных запросов к этим API. Поэтому нам приходится самостоятельно разрабатывать логику для имитации работы внешнего API. Хотя наша имитация может не полностью отражать реальную работу API, это все же лучше, чем игнорировать интеграцию.
+
+В командах часто каждый разработчик создает свои собственные моки для интеграций, что приводит к путанице и отсутствию единого стандарта. Существует высокая вероятность ошибок, когда мок может не сработать, и произойдет отправка запроса в реальный API.
+
+Для решения этой проблемы мы используем классы интеграции `EndpointsDeclaration` с декоратором `@integration.endpoint`, что позволяет создать единую точку входа, которую можно легко заменить во время тестирования и исключить возможность выполнения реального метода интеграции.
+
+Пример тестирования метода `FastAPI`, который вызывает метод интеграции:
+
+-   Обработчик FastAPI:
+
+```python
+@router.get("/translate")
+async def translate_api(
+    text: str, from_lang: str = "en", to_lang: str = "ru"
+) -> GoogleTranslateEndpoints.Schema.TranslateV2:
+    # Вызвать метод интеграции
+    return await gtapi.translate(text, from_lang, to_lang)
+```
+
+-   `test_имя.py` пример интеграции с `google` переводчик:
+
+```python
+from fastapi_accelerator.testutils.fixture_integration import patch_integration
+from app.integration.google_translate.mock import google_translate_mock_rules
+
+# Правила подмены методов интеграции на mock.
+# Если в коде вызывается интеграция, которая не указана в mock_rules, возникает исключение.
+# Это предотвращает случайные реальные запросы, если вы забыли указать mock.
+@patch_integration(mock_rules=google_translate_mock_rules)
+def test_integration_google_translate(client: TestClient, url_path_for: Callable):
+    # Выполнение тестового запроса
+    response = client.get(
+        url_path_for("translate_api"),
+        params=dict(text="Hello", from_lang="en", to_lang="ru"),
+    )
+    # Проверка ответа
+    assert response.json() == {"text": "Привет"}
+```
+
+> Значение для `mock_rules` можно использовать откуда угодно, но рекомендую хранить и брать из `app/integration/ПакетИнтеграции/mock.py`
+
+-   Рекомендуется хранить подменные функции в одном пакете с интеграцией в `app/integration/ПакетИнтеграции/mock.py`, чтобы при импорте этого пакета в другой проект также можно было использовать функции из `mock.py`, не создавая свои имитации.
+
+```python
+from app.integration.google_translate.endpoint import GoogleTranslateEndpoints
+from fastapi_accelerator.integration.http_integration import ApiHTTP
+from fastapi_accelerator.testutils.fixture_integration import MockRules
+
+
+async def overwrite_translate(api: ApiHTTP, *args, **kwargs):
+    # Удобный вариант имитации, когда через match аргументов, возвращаем определенный ответ.
+    match args:
+        case ("hello", "en", "ru"):
+            return {"text": "Привет"}
+    return None
+
+
+# Правила замены методов интеграции на mock
+google_translate_mock_rules = MockRules(
+    # Реальный метод интеграции: замена на mock функцию
+    {GoogleTranslateEndpoints.translate: overwrite_translate}
+)
+```
+
+> К мок-функциям применяются те же требования к формату ответа, что и к реальному методу интеграции.
 
 ## Примеры тестов
 
@@ -1392,22 +1824,3 @@ class TestTaskExecution2(BasePytest):
             },
         )
 ```
-
-# Планы развития
-
--   Добавить логику для интеграций с другими API, сделать это структурировано. Добавить линтеры для интеграций
--   Добавить шаблонизатор проекта
-
----
-
--   Обеспечить совместимость с последними(прошлыми) версиями FastAPI и связанных библиотек
--   Значительно увеличить покрытие кода тестами
--   Оптимизировать существующий код для повышения производительности
--   Провести нагрузочное тестирование и оптимизировать критические участки кода
--   Провести рефакторинг с учетом лучших практик и паттернов проектирования
--   Разработать и добавить аналогичный вариант для работы с `WebSocket`
--   Усовершенствовать механизм выполнения фоновых задач (`background tasks`)
--   Улучшить реализацию периодических задач, подобных тем, что представлены в `fastapi-utils`
--   Создать несколько детальных примеров проектов, демонстрирующих различные сценарии использования
--   Расширить документацию, добавив больше практических руководств и рекомендаций по применению
--   Исследовать возможности интеграции с популярными инструментами экосистемы FastAPI
