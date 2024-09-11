@@ -4,17 +4,21 @@
 
 import re
 from pathlib import Path
-from typing import Optional
 
 import pytz
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from fastapi_accelerator.db.dbsession import MainDatabaseManager
 from fastapi_accelerator.exception import custom_http_exception_handler
+from fastapi_accelerator.integration.http_integration import EndpointsDeclaration
 from fastapi_accelerator.middleware import log_request_response
+
+root_path_fastapi_accelerator = Path(__file__).parent.parent
 
 
 def base_pattern(
@@ -26,7 +30,8 @@ def base_pattern(
     base_dir: Path,
     database_manager: MainDatabaseManager,
     secret_key: str,
-    origins: Optional[list] = None,
+    origins: list | None = None,
+    useintegration: list[EndpointsDeclaration] | None = None,
 ):
     """Паттерн построения проекта по умолчанию"""
     # Установка временной зоны для проекта
@@ -77,6 +82,29 @@ def base_pattern(
     @app.get("/healthcheck", summary="Проверить состояние приложения", tags=["common"])
     async def healthcheck() -> HealthcheckResponse:
         return {"status": True, "version": version}
+
+    # HTML шаблоны из fastapi_accelerator
+    templates_fastapi_accelerator = Jinja2Templates(
+        directory=root_path_fastapi_accelerator / "templates"
+    )
+
+    # Каким интеграциям генерирууем докуменацию
+    if useintegration:
+        docintegrations = {
+            i.integration.name: {
+                "docs": i.integration.docs,
+                "base_url": i.base_url,
+            }
+            for i in useintegration
+        }
+
+        @app.get("/docintegration", summary="Документация интеграций", tags=["common"])
+        async def docintegration_api(request: Request) -> HTMLResponse:
+            return templates_fastapi_accelerator.TemplateResponse(
+                request=request,
+                name="docintegration.html",
+                context={"integrations": docintegrations},
+            )
 
 
 class HealthcheckResponse(BaseModel):

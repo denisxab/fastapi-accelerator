@@ -56,6 +56,14 @@ class SettingTest(metaclass=SingletonMeta):
             - Если True -> не удалять тестовую БД после тестов
             - Если False -> удалить тестовую БД после тестов
         """
+
+        # Проверить что в имени БД есть подстрока test
+        if (
+            DatabaseManager.database_url.split("/")[-1].find("test") == -1
+            or DatabaseManager.adatabase_url.split("/")[-1].find("test") == -1
+        ):
+            raise ValueError("Имя БД должно иметь подстроку test")
+
         self.DatabaseManager = DatabaseManager
         self.app = app
         self.alembic_migrate = alembic_migrate

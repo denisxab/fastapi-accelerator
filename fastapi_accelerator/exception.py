@@ -21,7 +21,7 @@ async def custom_http_exception_handler(request: Request, exc: StarletteHTTPExce
         app.exception_handler(StarletteHTTPException)(custom_http_exception_handler)
     """
     exc_status_code = exc.status_code
-    if exc_status_code in (400, 401, 403, 404):
+    if exc_status_code in (400, 401, 403, 404, 429, 503, 504):
         debug = DEBUG() or DEBUG(request.app)
         timezone = TIMEZONE() or TIMEZONE(request.app)
 

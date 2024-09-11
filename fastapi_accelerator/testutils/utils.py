@@ -1,5 +1,4 @@
-from collections import namedtuple
-from typing import Any, Callable, Generator, NamedTuple, Optional
+from typing import Any, Callable, Generator, Optional
 
 import pytest
 from fastapi import Response
@@ -54,11 +53,6 @@ def check_response_json(
         rm_key_from_deep_dict(response_json, exclude_list)
     assert response_json == exp_json
     return True
-
-
-def to_namedtuple(**kwargs: dict[str, Any]) -> NamedTuple:
-    """Вернуть именованный кортеж"""
-    return namedtuple("CommonNameTuple", kwargs.keys())(**kwargs)
 
 
 @pytest.fixture(scope="function")
