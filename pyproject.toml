@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi_accelerator"
-version = "0.0.4"
+version = "0.0.5"
 description = "Ускоритель разработки для FastAPI, предоставляющий готовые решения и инструменты для быстрого создания веб-приложений"
 authors = ["Denis Kustov <pro-progerkustov@yandex.ru>"]
 readme = "README.md"
