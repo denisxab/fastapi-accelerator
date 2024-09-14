@@ -61,24 +61,40 @@ class BaseOrm:
     def __init__(self, asession: AsyncSession):
         self.asession = asession
 
-    async def get(self, query: Select) -> Optional[T]:
-        """Получить объект по запросу"""
-        response = await self.asession.execute(query)
-        return response.scalar_one_or_none()
-
-    async def get_list(
-        self, db_model: Type[T], query: Select, deep: bool = False
-    ) -> list[T]:
-        """Получить список объектов по запросу"""
+    async def _execute(
+        self, query: Select, deep: bool = False, db_model: Type[T] | None = None
+    ):
+        """Выполнить Select запрос"""
         if not deep:
             response = await self.asession.execute(query)
-            return response.scalars().all()
+            return response
         else:
-            """Получить вложенный список объектов по запросу"""
+            if not db_model:
+                raise TypeError("Not set db_model")
             relationships = class_mapper(db_model).relationships
             options = [joinedload(getattr(db_model, rel.key)) for rel in relationships]
             response = await self.asession.execute(query.options(*options))
-            return response.scalars().all()
+            return response
+
+    async def get(
+        self,
+        query: Select,
+        deep: bool = False,
+        db_model: Type[T] | None = None,
+    ) -> Optional[T]:
+        """Получить объект по запросу"""
+        response = await self._execute(query, deep, db_model)
+        return response.scalar_one_or_none()
+
+    async def get_list(
+        self,
+        query: Select,
+        deep: bool = False,
+        db_model: Type[T] | None = None,
+    ) -> list[T]:
+        """Получить список объектов по запросу"""
+        response = await self._execute(query, deep, db_model)
+        return response.scalars().all()
 
     async def update(self, query: Update, update_data: dict) -> T:
         """Обновить объекты по запросу"""

@@ -1,3 +1,4 @@
+import asyncio
 from collections import namedtuple
 from typing import Any, NamedTuple
 
@@ -50,3 +51,8 @@ class NoInstanceMeta(type):
 def to_namedtuple(**kwargs: dict[str, Any]) -> NamedTuple:
     """Вернуть именованный кортеж"""
     return namedtuple("CommonNameTuple", kwargs.keys())(**kwargs)
+
+
+def run_async(async_function):
+    """Синхронная обертка для асинхронного вызова"""
+    return asyncio.get_event_loop().run_until_complete(async_function)

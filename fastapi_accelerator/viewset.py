@@ -88,9 +88,9 @@ class ViewSetList(BaseViewSet):
         ) -> self.paginator_class.Schema:
             offset = self.get_offset(page, size)
             response = await aorm.get_list(
-                self.db_model,
                 select(self.db_model).order_by(self.name_pk).offset(offset).limit(size),
                 deep=self.deep_schema,
+                db_model=self.db_model,
             )
             return self.paginator_class.json(page, size, response)
 
@@ -110,7 +110,9 @@ class ViewSetList(BaseViewSet):
             aorm: OrmAsync = Depends(AppOrm.aget_orm),
         ) -> List[self.pydantic_model]:
             return await aorm.get_list(
-                select(self.db_model).offset(skip).limit(limit), deep=self.deep_schema
+                select(self.db_model).offset(skip).limit(limit),
+                deep=self.deep_schema,
+                db_model=self.db_model,
             )
 
         return get_list_items

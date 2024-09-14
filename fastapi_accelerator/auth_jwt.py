@@ -24,11 +24,11 @@ class BaseAuthJWT:
     Пример:
 
         class AuthJWT(BaseAuthJWT):
-            def check_auth(username: str, password: str) -> bool:
+            async def check_auth(username: str, password: str) -> bool:
                 """Проверка введенного логина и пароля."""
                 return username == "admin" and password == "admin"
 
-            def add_jwt_body(username: str) -> dict:
+            async def add_jwt_body(username: str) -> dict:
                 """Функция для добавление дополнительных данных в JWT токен пользователя"""
                 return {"version": username.title()}
 
@@ -49,12 +49,12 @@ class BaseAuthJWT:
     secret_key = None
 
     @abc.abstractmethod
-    def check_auth(username: str, password: str) -> bool:
+    async def check_auth(username: str, password: str) -> bool:
         """Проверка введенного логина и пароля."""
         raise NotImplementedError()
 
     @abc.abstractmethod
-    def add_jwt_body(username: str) -> dict:
+    async def add_jwt_body(username: str) -> dict:
         """Функция для добавление дополнительных данных в JWT токен пользователя"""
 
     @classmethod
@@ -68,12 +68,12 @@ class BaseAuthJWT:
         async def login(
             user: Annotated[OAuth2PasswordRequestForm, Depends()],
         ) -> Token:
-            if cls.check_auth(user.username, user.password):
+            if await cls.check_auth(user.username, user.password):
                 return Token(
                     access_token=cls._create_access_token(
                         data={
                             "sub": user.username,
-                            **cls.add_jwt_body(user.username),
+                            **await cls.add_jwt_body(user.username),
                         },
                     ),
                     token_type="bearer",

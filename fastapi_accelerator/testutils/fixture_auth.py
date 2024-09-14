@@ -2,6 +2,7 @@ from functools import wraps
 
 from fastapi_accelerator.auth_jwt import BaseAuthJWT
 from fastapi_accelerator.testutils.fixture_base import SettingTest
+from fastapi_accelerator.utils import run_async
 
 
 def client_auth_jwt(username: str = None):
@@ -42,7 +43,7 @@ def client_auth_jwt(username: str = None):
             access_token: str = auth_jwt._create_access_token(
                 data={
                     "sub": current_username,
-                    **auth_jwt.add_jwt_body(current_username),
+                    **run_async(auth_jwt.add_jwt_body(current_username)),
                 },
             )
             kwargs["client"].headers["authorization"] = f"Bearer {access_token}"

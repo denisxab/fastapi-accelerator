@@ -1,6 +1,5 @@
 """Модуль для работы с тестовой РСУБД"""
 
-import asyncio
 from typing import Any, Generator
 
 import pytest
@@ -13,6 +12,7 @@ from sqlalchemy_utils import create_database, database_exists
 
 from fastapi_accelerator.db.dbsession import MainDatabaseManager
 from fastapi_accelerator.testutils.fixture_base import SettingTest
+from fastapi_accelerator.utils import run_async
 
 
 @pytest.fixture(scope="session")
@@ -69,11 +69,6 @@ def common_client() -> Generator[TestClient, None, None]:
 
     with TestClient(SettingTest.instance.app) as test_client:
         yield test_client
-
-
-def run_async(coro):
-    """Синхронная обертка для асинхронного вызова"""
-    return asyncio.get_event_loop().run_until_complete(coro)
 
 
 @pytest.fixture(scope="function")
