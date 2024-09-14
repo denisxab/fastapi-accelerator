@@ -226,9 +226,9 @@ class FileViewSet(FullViewSet):
             aorm: OrmAsync = Depends(AppOrm.aget_orm),
         ) -> List[self.pydantic_model]:
             return await aorm.get_list(
-                self.db_model,
                 select(self.db_model).offset(skip).limit(limit),
                 deep=self.deep_schema,
+                db_model=self.db_model,
             )
         return get_list_items
     '''
@@ -246,7 +246,7 @@ router.views = [
 from fastapi_accelerator.auth_jwt import BaseAuthJWT
 
 class AuthJWT(BaseAuthJWT):
-    def check_auth(username: str, password: str) -> bool:
+    async def check_auth(username: str, password: str) -> bool:
         """Проверка введенного логина и пароля."""
         return username == "admin" and password == "admin"
 
@@ -474,6 +474,10 @@ class TestИмя(BaseAuthJwtPytest):
 
 # Планы развития
 
+В процессе внедрения:
+
+-   [ ] Значительно увеличить покрытие кода тестами
+
 Идеи:
 
 -   [ ] Добавить шаблонизатор проекта
@@ -489,6 +493,6 @@ class TestИмя(BaseAuthJwtPytest):
 -   [ ] Расширить документацию, добавив больше практических руководств и рекомендаций по применению
 -   [ ] Исследовать возможности интеграции с популярными инструментами экосистемы FastAPI
 
-В процессе внедрения:
+Сделано:
 
 -   [x] Добавить логику для интеграций с другими API.

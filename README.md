@@ -2,7 +2,9 @@
 
 ## Зачем нужен, какие проблемы решает ?
 
-Основная цель - ускорить и упростить разработку проектов на FastAPI. Это достигается путем:
+Основная цель - ускорить и упростить разработку проектов на FastAPI.
+
+Это достигается путем:
 
 1. Предоставления переиспользуемого кода для типовых задач.
 2. Внедрения универсального менеджера для работы с РСУБД.
@@ -326,6 +328,7 @@ ADMIN_PASSWORD = "password"
 -   Добавление метода `healthcheck`.
 -   `Middleware` для отладки времени выполнения API-запросов.
 -   Подробный вывод для `HTTP` исключений.
+-   Добавить [docintegration](#use-docintegration)
 
 ## Use DatabaseManager
 
@@ -428,7 +431,7 @@ class FileView:
         limit=Query(100),
         aorm: OrmAsync = Depends(DatabaseManager.aget_orm),
     ) -> List[File]:
-        return await aorm.get_list(FileDb, select(FileDb).offset(skip).limit(limit))
+        return await aorm.get_list(select(FileDb).offset(skip).limit(limit))
 
     @router.get("/file/{file_uid}")
     async def get_file(
@@ -539,6 +542,17 @@ alembic upgrade head
 
 ## Use Cache
 
+-   Предварительная настройка, заполнить файл `app/core/cache.py`:
+
+```python
+import redis.asyncio as redis
+
+from app.core.config import REDIS_URL
+
+# Создаем глобальный объект Redis
+redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
+```
+
 -   Вы можете использовать кеширование API ответа через декоратор `@cache_redis()`
 
 ```python
@@ -556,17 +570,6 @@ async def get_item(
         select(Files).filter(Files.id == item_uid)
     )
     return response
-```
-
--   Предварительная настройка, заполнить файл `app/core/cache.py`:
-
-```python
-import redis.asyncio as redis
-
-from app.core.config import REDIS_URL
-
-# Создаем глобальный объект Redis
-redis_client = redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)
 ```
 
 ## Use ViewSet
@@ -640,7 +643,9 @@ class UserViewSet(FullViewSet):
             aorm: OrmAsync = Depends(AppOrm.aget_orm),
         ) -> List[self.pydantic_model]:
             return await aorm.get_list(
-                self.db_model, select(self.db_model).offset(skip).limit(limit), deep=self.deep_schema
+                select(self.db_model).offset(skip).limit(limit),
+                deep=self.deep_schema,
+                db_model=self.db_model,
             )
         return get_list_items
 
@@ -678,6 +683,7 @@ router.views = [
 Получить текущие время сервера с учётом его временной зоны
 
 ```python
+import pytz
 from fastapi_accelerator.timezone import get_datetime_now
 
 # Вариант 1
@@ -685,8 +691,10 @@ get_datetime_now(request.app.state.TIMEZONE).isoformat()
 # Вариант 2
 get_datetime_now(app.state.TIMEZONE).isoformat()
 # Вариант 3
-import pytz
 get_datetime_now(pytz.timezone("Europe/Moscow")).isoformat()
+# Вариант 4
+timezone = TIMEZONE() or TIMEZONE(request.app)
+get_datetime_now(timezone).isoformat()
 ```
 
 ## Use HTTPException
@@ -713,11 +721,11 @@ async def get_users():
 from fastapi_accelerator.auth_jwt import BaseAuthJWT
 
 class AuthJWT(BaseAuthJWT):
-    def check_auth(username: str, password: str) -> bool:
+    async def check_auth(username: str, password: str) -> bool:
         """Проверка введенного логина и пароля."""
         return username == "admin" and password == "admin"
 
-    def add_jwt_body(username: str) -> dict:
+    async def add_jwt_body(username: str) -> dict:
         """Функция для добавление дополнительных данных в JWT токен пользователя"""
         return {"version": username.title()}
 
@@ -1071,7 +1079,7 @@ from fastapi_accelerator.pattern.pattern_fastapi import base_pattern
 # Паттерн для проекта
 base_pattern(
     app,
-    ...
+    ...,
     useintegration=[интеграция_1, интеграция_2],
 )
 ```
@@ -1213,10 +1221,11 @@ SettingTest(TestDatabaseManager, app, alembic_migrate=True, keepdb=True) # noqa 
 
     -   `@apply_fixture_db(ФункцияВозвращающаяФикстуры)` - Декоратор, который добавляет фикстуры в БД перед тестом и удаляет их после теста.
     -   `@client_auth_jwt()` - Декоратор который аутентифицирует тестового клиента по JWT.
+    -   `@patch_integration(ПравилаПодмены)` - Декоратор который подменяет методы интеграций на Mock функции.
 
 ## Подробнее про компоненты для тестирования
 
-### Фикстура `client`
+### Fixture - `client`
 
 Основная фикстура для выполнения тестовых API запросов.
 
@@ -1246,7 +1255,7 @@ def test_имя(client: TestClient):
     response = client.get('url')
 ```
 
-### Декоратор `@client_auth_jwt`
+### Decorator - `@client_auth_jwt`
 
 На практике нам часто приходиться тестировать API методы которые требуют аутентификацию. Делать обход аутентификации в тестах плохой вариант, так как можно упустить некоторые исключения, или логику API метода которая завязана на данных аутентифицированного пользователя. Поэтому чтобы аутентифицировать тестового клиента, укажите декоратор `@client_auth_jwt` для тестовой функции/метода
 
@@ -1277,7 +1286,7 @@ class TestИмяКласса(BasePytest):
 
 > Если вы используете декоратор `@client_auth_jwt` в классе `BasePytest`, то он возьмет `username` из `self.TEST_USER['username']`, этот атрибут уже определен в `BasePytest` и равен по умолчанию `test`.
 
-### Декоратор `@apply_fixture_db`
+### Decorator - `@apply_fixture_db`
 
 Идея взята из тестирования `Django`, в котором можно указать в атрибуте `fixtures` список файлов с фикстурами, которые будут загружены для тестов, и удалены после окончания. Этот очень удобно для переиспользовать тестовых данных.
 
@@ -1357,8 +1366,77 @@ class TestИмяКласса(BasePytest):
         response = client.get('url')
         print(self.fixtures)
 ```
+### Decorator - `@patch_integration`
 
-### Контекстный менеджер `track_queries`
+Тестирование интеграций с внешними API
+
+Самым сложным аспектом тестирования являются интеграции с внешними API, поскольку во время тестов необходимо избегать выполнения реальных запросов к этим API. Поэтому нам приходится самостоятельно разрабатывать логику для имитации работы внешнего API. Хотя наша имитация может не полностью отражать реальную работу API, это все же лучше, чем игнорировать интеграцию.
+
+В командах часто каждый разработчик создает свои собственные моки для интеграций, что приводит к путанице и отсутствию единого стандарта. Существует высокая вероятность ошибок, когда мок может не сработать, и произойдет отправка запроса в реальный API.
+
+Для решения этой проблемы мы используем классы интеграции `EndpointsDeclaration` с декоратором `@integration.endpoint`, что позволяет создать единую точку входа, которую можно легко заменить во время тестирования и исключить возможность выполнения реального метода интеграции.
+
+Пример тестирования метода `FastAPI`, который вызывает метод интеграции:
+
+-   Обработчик FastAPI:
+
+```python
+@router.get("/translate")
+async def translate_api(
+    text: str, from_lang: str = "en", to_lang: str = "ru"
+) -> GoogleTranslateEndpoints.Schema.TranslateV2:
+    # Вызвать метод интеграции
+    return await gtapi.translate(text, from_lang, to_lang)
+```
+
+-   `test_имя.py` пример интеграции с `google` переводчик:
+
+```python
+from fastapi_accelerator.testutils.fixture_integration import patch_integration
+from app.integration.google_translate.mock import google_translate_mock_rules
+
+# Правила подмены методов интеграции на mock.
+# Если в коде вызывается интеграция, которая не указана в mock_rules, возникает исключение.
+# Это предотвращает случайные реальные запросы, если вы забыли указать mock.
+@patch_integration(mock_rules=google_translate_mock_rules)
+def test_integration_google_translate(client: TestClient, url_path_for: Callable):
+    # Выполнение тестового запроса
+    response = client.get(
+        url_path_for("translate_api"),
+        params=dict(text="Hello", from_lang="en", to_lang="ru"),
+    )
+    # Проверка ответа
+    assert response.json() == {"text": "Привет"}
+```
+
+> Значение для `mock_rules` можно использовать откуда угодно, но рекомендую хранить и брать из `app/integration/ПакетИнтеграции/mock.py`
+
+-   Рекомендуется хранить подменные функции в одном пакете с интеграцией в `app/integration/ПакетИнтеграции/mock.py`, чтобы при импорте этого пакета в другой проект также можно было использовать функции из `mock.py`, не создавая свои имитации.
+
+```python
+from app.integration.google_translate.endpoint import GoogleTranslateEndpoints
+from fastapi_accelerator.integration.http_integration import ApiHTTP
+from fastapi_accelerator.testutils.fixture_integration import MockRules
+
+
+async def overwrite_translate(api: ApiHTTP, *args, **kwargs):
+    # Удобный вариант имитации, когда через match аргументов, возвращаем определенный ответ.
+    match args:
+        case ("hello", "en", "ru"):
+            return {"text": "Привет"}
+    return None
+
+
+# Правила замены методов интеграции на mock
+google_translate_mock_rules = MockRules(
+    # Реальный метод интеграции: замена на mock функцию
+    {GoogleTranslateEndpoints.translate: overwrite_translate}
+)
+```
+
+> К мок-функциям применяются те же требования к формату ответа, что и к реальному методу интеграции.
+
+### Context manager - `track_queries`
 
 Идея взята из тестирования `Django` метода `self.assertNumQueries`, который поваляет проверять количество выполненных SQL команд в контексте. Это очень полезно когда используется ORM, который может из за неаккуратного использования, генерировать сотни SQL команд. Поэтому лучше у каждого вызова тестового API метода отлеживать количество выполненных SQL команд.
 
@@ -1385,7 +1463,7 @@ def test_имя(client: TestClient, db_manager: MainDatabaseManager):
     assert tracker.count == 3, tracker.queries
 ```
 
-### Функция `check_response_json`
+### Func - `check_response_json`
 
 По опыту написания тестов, могу выделить несколько основных проверок для ответов API JSON.
 
@@ -1485,73 +1563,6 @@ class TestИмяКласса(BaseAuthJwtPytest):
         ...
 ```
 
-## Тестирование интеграций с внешними API
-
-Самым сложным аспектом тестирования являются интеграции с внешними API, поскольку во время тестов необходимо избегать выполнения реальных запросов к этим API. Поэтому нам приходится самостоятельно разрабатывать логику для имитации работы внешнего API. Хотя наша имитация может не полностью отражать реальную работу API, это все же лучше, чем игнорировать интеграцию.
-
-В командах часто каждый разработчик создает свои собственные моки для интеграций, что приводит к путанице и отсутствию единого стандарта. Существует высокая вероятность ошибок, когда мок может не сработать, и произойдет отправка запроса в реальный API.
-
-Для решения этой проблемы мы используем классы интеграции `EndpointsDeclaration` с декоратором `@integration.endpoint`, что позволяет создать единую точку входа, которую можно легко заменить во время тестирования и исключить возможность выполнения реального метода интеграции.
-
-Пример тестирования метода `FastAPI`, который вызывает метод интеграции:
-
--   Обработчик FastAPI:
-
-```python
-@router.get("/translate")
-async def translate_api(
-    text: str, from_lang: str = "en", to_lang: str = "ru"
-) -> GoogleTranslateEndpoints.Schema.TranslateV2:
-    # Вызвать метод интеграции
-    return await gtapi.translate(text, from_lang, to_lang)
-```
-
--   `test_имя.py` пример интеграции с `google` переводчик:
-
-```python
-from fastapi_accelerator.testutils.fixture_integration import patch_integration
-from app.integration.google_translate.mock import google_translate_mock_rules
-
-# Правила подмены методов интеграции на mock.
-# Если в коде вызывается интеграция, которая не указана в mock_rules, возникает исключение.
-# Это предотвращает случайные реальные запросы, если вы забыли указать mock.
-@patch_integration(mock_rules=google_translate_mock_rules)
-def test_integration_google_translate(client: TestClient, url_path_for: Callable):
-    # Выполнение тестового запроса
-    response = client.get(
-        url_path_for("translate_api"),
-        params=dict(text="Hello", from_lang="en", to_lang="ru"),
-    )
-    # Проверка ответа
-    assert response.json() == {"text": "Привет"}
-```
-
-> Значение для `mock_rules` можно использовать откуда угодно, но рекомендую хранить и брать из `app/integration/ПакетИнтеграции/mock.py`
-
--   Рекомендуется хранить подменные функции в одном пакете с интеграцией в `app/integration/ПакетИнтеграции/mock.py`, чтобы при импорте этого пакета в другой проект также можно было использовать функции из `mock.py`, не создавая свои имитации.
-
-```python
-from app.integration.google_translate.endpoint import GoogleTranslateEndpoints
-from fastapi_accelerator.integration.http_integration import ApiHTTP
-from fastapi_accelerator.testutils.fixture_integration import MockRules
-
-
-async def overwrite_translate(api: ApiHTTP, *args, **kwargs):
-    # Удобный вариант имитации, когда через match аргументов, возвращаем определенный ответ.
-    match args:
-        case ("hello", "en", "ru"):
-            return {"text": "Привет"}
-    return None
-
-
-# Правила замены методов интеграции на mock
-google_translate_mock_rules = MockRules(
-    # Реальный метод интеграции: замена на mock функцию
-    {GoogleTranslateEndpoints.translate: overwrite_translate}
-)
-```
-
-> К мок-функциям применяются те же требования к формату ответа, что и к реальному методу интеграции.
 
 ## Примеры тестов
 
