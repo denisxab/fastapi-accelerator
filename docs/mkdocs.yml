@@ -1,0 +1,56 @@
+site_name: Fastapi Accelerator
+site_url: https://denisxab.github.io/fastapi-accelerator/
+theme: material
+nav:
+  - Home: index.md
+  - File descriptions: info_files.md
+  - Business logic: business_logic.md
+  - Testing logic: test_logic.md
+  - Code Docs: code_docs.md
+  - Plan: plan.md
+  - About: about.md
+
+plugins:
+  - search
+  # - awesome-pages
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+  - mkdocstrings
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: ru
+          default: true
+          name: Русский
+          build: true
+        - locale: en
+          name: English
+          build: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.magiclink
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  # - toc:
+  #     permalink: true
+#   - codehilite:
+#       guess_lang: false
+#   - footnotes
+#   - toc:
+#       permalink: true
+#   - pymdownx.arithmatex
+#   - pymdownx.betterem:
+#       smart_enable: all
+#   - pymdownx.caret
+#   - pymdownx.critic
+#   - pymdownx.details
+#   - pymdownx.inlinehilite
+#   - pymdownx.mark
+#   - pymdownx.smartsymbols
+
+#   - pymdownx.tabbed

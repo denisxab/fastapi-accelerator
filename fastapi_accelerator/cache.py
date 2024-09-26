@@ -16,7 +16,6 @@ from fastapi_accelerator.appstate import CACHE_STATUS
 
 
 class BaseCache:
-
     async def get(key: str) -> Any: ...
     async def set(key: str, data: str, ex: timedelta = None): ...
 
@@ -34,9 +33,7 @@ def cache_redis(cache_class: BaseCache, cache_ttl: timedelta, cache: bool = True
         cache_ttl: Время жизни кеша.
         cache: Флаг, включающий или отключающий кеширование.
 
-    Returns:
-        Callable: Декоратор функции.
-
+    ```python
     class ViewSetRetrieve(BaseViewSet):
         def register_routes(self):
             '''Регистраций API обработчиков'''
@@ -54,6 +51,7 @@ def cache_redis(cache_class: BaseCache, cache_ttl: timedelta, cache: bool = True
                 return response
 
             return get_item
+    ```
     """
 
     def decorator(func):

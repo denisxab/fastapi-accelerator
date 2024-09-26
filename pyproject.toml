@@ -48,6 +48,10 @@ pytest = ">=8.3.2"
 pytest-asyncio = ">=0.23.8"
 httpx = ">=0.27.0"
 sqlalchemy-utils = ">=0.41.2"
+mkdocs-material = "^9.5.38"
+mkdocs-minify-plugin = "^0.8.0"
+mkdocstrings-python = "^1.11.1"
+mkdocs-static-i18n = "^1.2.3"
 
 [build-system]
 requires = ["poetry-core"]

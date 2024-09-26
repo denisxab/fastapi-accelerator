@@ -82,25 +82,25 @@ class sp:
 
     Рекомендуемый порядок применения паттернов стабильности:
 
-    # Fallback должен быть самым внутренним, так как он предоставляет
-    # альтернативное поведение в случае сбоя основной функции.
-    Fallback(alternative_func)
+    Fallback должен быть самым внутренним, так как он предоставляет
+    альтернативное поведение в случае сбоя основной функции.
+    > Fallback(alternative_func)
 
-    # Timeout следует применять сразу после Fallback, чтобы ограничить время выполнения как
-    # основной функции, так и резервной.
-    Timeout(seconds=timeout_seconds)
+    Timeout следует применять сразу после Fallback, чтобы ограничить время выполнения как
+    основной функции, так и резервной.
+    > Timeout(seconds=timeout_seconds)
 
-    # CircuitBreaker идет следующим, чтобы предотвратить повторные вызовы, если функция постоянно
-    # завершается неудачно или по таймауту.
-    CircuitBreaker(fail_threshold, reset_timeout)
+    CircuitBreaker идет следующим, чтобы предотвратить повторные вызовы, если функция постоянно
+    завершается неудачно или по таймауту.
+    > CircuitBreaker(fail_threshold, reset_timeout)
 
-    # Retry следует за CircuitBreaker, чтобы попытаться выполнить
-    # операцию несколько раз, если CircuitBreaker позволяет это.
-    RetryPattern(max_attempts=max_attempts, delay=timedelta(seconds=delay_seconds))
+    Retry следует за CircuitBreaker, чтобы попытаться выполнить
+    операцию несколько раз, если CircuitBreaker позволяет это.
+    > RetryPattern(max_attempts=max_attempts, delay=timedelta(seconds=delay_seconds))
 
-    # Throttling применяется в последнюю очередь, чтобы ограничить частоту
-    # вызовов всей обёрнутой функциональности.
-    Throttling(calls_per_second=calls_per_second)
+    Throttling применяется в последнюю очередь, чтобы ограничить частоту
+    вызовов всей обёрнутой функциональности.
+    > Throttling(calls_per_second=calls_per_second)
     """
 
     class Fallback(BaseStabilityPattern):

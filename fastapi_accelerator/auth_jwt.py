@@ -23,24 +23,28 @@ class BaseAuthJWT:
     '''
     Пример:
 
-        class AuthJWT(BaseAuthJWT):
-            async def check_auth(username: str, password: str) -> bool:
-                """Проверка введенного логина и пароля."""
-                return username == "admin" and password == "admin"
+    ```python
+    class AuthJWT(BaseAuthJWT):
+        async def check_auth(username: str, password: str) -> bool:
+            """Проверка введенного логина и пароля."""
+            return username == "admin" and password == "admin"
 
-            async def add_jwt_body(username: str) -> dict:
-                """Функция для добавление дополнительных данных в JWT токен пользователя"""
-                return {"version": username.title()}
+        async def add_jwt_body(username: str) -> dict:
+            """Функция для добавление дополнительных данных в JWT токен пользователя"""
+            return {"version": username.title()}
 
 
-        # Подключить аутентификацию по JWT
-        AuthJWT.mount_auth(app)
+    # Подключить аутентификацию по JWT
+    AuthJWT.mount_auth(app)
+    ```
 
     Пример защиты API метода:
 
-        @app.get("/cheack_protected", summary="Проверить аутентификацию по JWT")
-        async def protected_route(jwt: dict = Depends(jwt_auth)):
-            return {"message": "This is a protected route", "user": jwt}
+    ```python
+    @app.get("/cheack_protected", summary="Проверить аутентификацию по JWT")
+    async def protected_route(jwt: dict = Depends(jwt_auth)):
+        return {"message": "This is a protected route", "user": jwt}
+    ```
     '''
 
     ALGORITHM = "HS256"
