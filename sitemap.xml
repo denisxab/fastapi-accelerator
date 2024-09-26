@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/about/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/about/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/about/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/business_logic/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/business_logic/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/business_logic/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/code_docs/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/code_docs/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/code_docs/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/info_files/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/info_files/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/info_files/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/plan/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/plan/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/plan/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/test_logic/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/test_logic/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/test_logic/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/about/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/about/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/about/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/business_logic/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/business_logic/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/business_logic/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/code_docs/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/code_docs/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/code_docs/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/info_files/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/info_files/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/info_files/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/plan/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/plan/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/plan/"/>
+    </url>
+    <url>
+        <loc>https://denisxab.github.io/fastapi-accelerator/en/test_logic/</loc>
+        <lastmod>2024-09-26</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://denisxab.github.io/fastapi-accelerator/en/test_logic/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://denisxab.github.io/fastapi-accelerator/test_logic/"/>
+    </url>
+</urlset>

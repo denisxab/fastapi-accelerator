@@ -1,0 +1,512 @@
+<!doctype html><html lang=ru class=no-js> <head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><link href=https://denisxab.github.io/fastapi-accelerator/business_logic/ rel=canonical><link href=../info_files/ rel=prev><link href=../test_logic/ rel=next><link rel=icon href=../assets/images/favicon.png><meta name=generator content="mkdocs-1.6.1, mkdocs-material-9.5.38"><title>Business logic - Fastapi Accelerator</title><link rel=stylesheet href=../assets/stylesheets/main.8c3ca2c6.min.css><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback"><style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style><link rel=stylesheet href=../assets/_mkdocstrings.css><script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script></head> <body dir=ltr> <input class=md-toggle data-md-toggle=drawer type=checkbox id=__drawer autocomplete=off> <input class=md-toggle data-md-toggle=search type=checkbox id=__search autocomplete=off> <label class=md-overlay for=__drawer></label> <div data-md-component=skip> <a href=#use-base-pattern class=md-skip> Перейти к содержанию </a> </div> <div data-md-component=announce> </div> <header class="md-header md-header--shadow" data-md-component=header> <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул"> <a href=.. title="Fastapi Accelerator" class="md-header__button md-logo" aria-label="Fastapi Accelerator" data-md-component=logo> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg> </a> <label class="md-header__button md-icon" for=__drawer> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg> </label> <div class=md-header__title data-md-component=header-title> <div class=md-header__ellipsis> <div class=md-header__topic> <span class=md-ellipsis> Fastapi Accelerator </span> </div> <div class=md-header__topic data-md-component=header-topic> <span class=md-ellipsis> Business logic </span> </div> </div> </div> <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script> <div class=md-header__option> <div class=md-select> <button class="md-header__button md-icon" aria-label="Выберите язык"> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg> </button> <div class=md-select__inner> <ul class=md-select__list> <li class=md-select__item> <a href=./ hreflang=ru class=md-select__link> Русский </a> </li> <li class=md-select__item> <a href=../en/business_logic/ hreflang=en class=md-select__link> English </a> </li> </ul> </div> </div> </div> <label class="md-header__button md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> </label> <div class=md-search data-md-component=search role=dialog> <label class=md-search__overlay for=__search></label> <div class=md-search__inner role=search> <form class=md-search__form name=search> <input type=text class=md-search__input name=query aria-label=Поиск placeholder=Поиск autocapitalize=off autocorrect=off autocomplete=off spellcheck=false data-md-component=search-query required> <label class="md-search__icon md-icon" for=__search> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg> </label> <nav class=md-search__options aria-label=Поиск> <button type=reset class="md-search__icon md-icon" title=Очистить aria-label=Очистить tabindex=-1> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> </button> </nav> </form> <div class=md-search__output> <div class=md-search__scrollwrap tabindex=0 data-md-scrollfix> <div class=md-search-result data-md-component=search-result> <div class=md-search-result__meta> Инициализация поиска </div> <ol class=md-search-result__list role=presentation></ol> </div> </div> </div> </div> </div> </nav> </header> <div class=md-container data-md-component=container> <main class=md-main data-md-component=main> <div class="md-main__inner md-grid"> <div class="md-sidebar md-sidebar--primary" data-md-component=sidebar data-md-type=navigation> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--primary" aria-label=Навигация data-md-level=0> <label class=md-nav__title for=__drawer> <a href=.. title="Fastapi Accelerator" class="md-nav__button md-logo" aria-label="Fastapi Accelerator" data-md-component=logo> <svg xmlns=http://www.w3.org/2000/svg viewbox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg> </a> Fastapi Accelerator </label> <ul class=md-nav__list data-md-scrollfix> <li class=md-nav__item> <a href=.. class=md-nav__link> <span class=md-ellipsis> Home </span> </a> </li> <li class=md-nav__item> <a href=../info_files/ class=md-nav__link> <span class=md-ellipsis> File descriptions </span> </a> </li> <li class="md-nav__item md-nav__item--active"> <input class="md-nav__toggle md-toggle" type=checkbox id=__toc> <label class="md-nav__link md-nav__link--active" for=__toc> <span class=md-ellipsis> Business logic </span> <span class="md-nav__icon md-icon"></span> </label> <a href=./ class="md-nav__link md-nav__link--active"> <span class=md-ellipsis> Business logic </span> </a> <nav class="md-nav md-nav--secondary" aria-label=Содержание> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> Содержание </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#use-base-pattern class=md-nav__link> <span class=md-ellipsis> Use Base Pattern </span> </a> </li> <li class=md-nav__item> <a href=#use-databasemanager class=md-nav__link> <span class=md-ellipsis> Use DatabaseManager </span> </a> <nav class=md-nav aria-label="Use DatabaseManager"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#maindatabasemanager class=md-nav__link> <span class=md-ellipsis> Основанные компоненты MainDatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#use-ormasync class=md-nav__link> <span class=md-ellipsis> Use OrmAsync </span> </a> </li> <li class=md-nav__item> <a href=#databasemanager class=md-nav__link> <span class=md-ellipsis> Создать модель через DatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#crud-databasemanager class=md-nav__link> <span class=md-ellipsis> Выполнение CRUD через DatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#alembic class=md-nav__link> <span class=md-ellipsis> Работа с миграциями через Alembic </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-cache class=md-nav__link> <span class=md-ellipsis> Use Cache </span> </a> </li> <li class=md-nav__item> <a href=#use-viewset class=md-nav__link> <span class=md-ellipsis> Use ViewSet </span> </a> </li> <li class=md-nav__item> <a href=#use-time-zone class=md-nav__link> <span class=md-ellipsis> Use Time Zone </span> </a> </li> <li class=md-nav__item> <a href=#use-httpexception class=md-nav__link> <span class=md-ellipsis> Use HTTPException </span> </a> </li> <li class=md-nav__item> <a href=#use-authjwt class=md-nav__link> <span class=md-ellipsis> Use AuthJWT </span> </a> </li> <li class=md-nav__item> <a href=#use-integration class=md-nav__link> <span class=md-ellipsis> Use Integration </span> </a> <nav class=md-nav aria-label="Use Integration"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#use-integration-http class=md-nav__link> <span class=md-ellipsis> Use Integration HTTP </span> </a> <nav class=md-nav aria-label="Use Integration HTTP"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#google-translate class=md-nav__link> <span class=md-ellipsis> Пример интеграции с Google Translate </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-stability-patterns class=md-nav__link> <span class=md-ellipsis> Use Stability Patterns </span> </a> </li> <li class=md-nav__item> <a href=#use-py2dantic class=md-nav__link> <span class=md-ellipsis> Use py2dantic </span> </a> </li> <li class=md-nav__item> <a href=#use-docintegration class=md-nav__link> <span class=md-ellipsis> Use docintegration </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-admin-panel class=md-nav__link> <span class=md-ellipsis> Use Admin Panel </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=../test_logic/ class=md-nav__link> <span class=md-ellipsis> Testing logic </span> </a> </li> <li class=md-nav__item> <a href=../code_docs/ class=md-nav__link> <span class=md-ellipsis> Code Docs </span> </a> </li> <li class=md-nav__item> <a href=../plan/ class=md-nav__link> <span class=md-ellipsis> Plan </span> </a> </li> <li class=md-nav__item> <a href=../about/ class=md-nav__link> <span class=md-ellipsis> About </span> </a> </li> </ul> </nav> </div> </div> </div> <div class="md-sidebar md-sidebar--secondary" data-md-component=sidebar data-md-type=toc> <div class=md-sidebar__scrollwrap> <div class=md-sidebar__inner> <nav class="md-nav md-nav--secondary" aria-label=Содержание> <label class=md-nav__title for=__toc> <span class="md-nav__icon md-icon"></span> Содержание </label> <ul class=md-nav__list data-md-component=toc data-md-scrollfix> <li class=md-nav__item> <a href=#use-base-pattern class=md-nav__link> <span class=md-ellipsis> Use Base Pattern </span> </a> </li> <li class=md-nav__item> <a href=#use-databasemanager class=md-nav__link> <span class=md-ellipsis> Use DatabaseManager </span> </a> <nav class=md-nav aria-label="Use DatabaseManager"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#maindatabasemanager class=md-nav__link> <span class=md-ellipsis> Основанные компоненты MainDatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#use-ormasync class=md-nav__link> <span class=md-ellipsis> Use OrmAsync </span> </a> </li> <li class=md-nav__item> <a href=#databasemanager class=md-nav__link> <span class=md-ellipsis> Создать модель через DatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#crud-databasemanager class=md-nav__link> <span class=md-ellipsis> Выполнение CRUD через DatabaseManager </span> </a> </li> <li class=md-nav__item> <a href=#alembic class=md-nav__link> <span class=md-ellipsis> Работа с миграциями через Alembic </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-cache class=md-nav__link> <span class=md-ellipsis> Use Cache </span> </a> </li> <li class=md-nav__item> <a href=#use-viewset class=md-nav__link> <span class=md-ellipsis> Use ViewSet </span> </a> </li> <li class=md-nav__item> <a href=#use-time-zone class=md-nav__link> <span class=md-ellipsis> Use Time Zone </span> </a> </li> <li class=md-nav__item> <a href=#use-httpexception class=md-nav__link> <span class=md-ellipsis> Use HTTPException </span> </a> </li> <li class=md-nav__item> <a href=#use-authjwt class=md-nav__link> <span class=md-ellipsis> Use AuthJWT </span> </a> </li> <li class=md-nav__item> <a href=#use-integration class=md-nav__link> <span class=md-ellipsis> Use Integration </span> </a> <nav class=md-nav aria-label="Use Integration"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#use-integration-http class=md-nav__link> <span class=md-ellipsis> Use Integration HTTP </span> </a> <nav class=md-nav aria-label="Use Integration HTTP"> <ul class=md-nav__list> <li class=md-nav__item> <a href=#google-translate class=md-nav__link> <span class=md-ellipsis> Пример интеграции с Google Translate </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-stability-patterns class=md-nav__link> <span class=md-ellipsis> Use Stability Patterns </span> </a> </li> <li class=md-nav__item> <a href=#use-py2dantic class=md-nav__link> <span class=md-ellipsis> Use py2dantic </span> </a> </li> <li class=md-nav__item> <a href=#use-docintegration class=md-nav__link> <span class=md-ellipsis> Use docintegration </span> </a> </li> </ul> </nav> </li> <li class=md-nav__item> <a href=#use-admin-panel class=md-nav__link> <span class=md-ellipsis> Use Admin Panel </span> </a> </li> </ul> </nav> </div> </div> </div> <div class=md-content data-md-component=content> <article class="md-content__inner md-typeset"> <h1>Business logic</h1> <h2 id=use-base-pattern>Use Base Pattern</h2> <p>Функция <code>base_pattern</code> добавляет множество полезных функций в <code>app</code>, включая:</p> <ul> <li>Заполнение <code>state</code> и другую информацию у <code>app</code>.</li> <li>Разрешение <code>CORS</code>.</li> <li>Подключение роутеров с поддержкой <code>ViewSet</code>.</li> <li>Добавление метода <code>healthcheck</code>.</li> <li><code>Middleware</code> для отладки времени выполнения API-запросов.</li> <li>Подробный вывод для <code>HTTP</code> исключений.</li> <li>Добавить <a href=#use-docintegration>docintegration</a></li> </ul> <h2 id=use-databasemanager>Use DatabaseManager</h2> <p><code>DatabaseManager</code> - это универсальный инструмент для работы с РСУБД, предоставляющий как синхронные, так и асинхронные(название начинается на <code>a</code>) методы. <code>DatabaseManager</code> использует патер одиночка, поэтому может быть легко подменен в тестах.</p> <p>Пример создания менеджера БД в файле <code>app/db/base.py</code>:</p> <div class=highlight><pre><span></span><code><span class=sd>&quot;&quot;&quot;Модуль подключения к РСУБД&quot;&quot;&quot;</span>
+
+<span class=kn>from</span> <span class=nn>app.core.config</span> <span class=kn>import</span> <span class=n>DATABASE_URL</span><span class=p>,</span> <span class=n>DEBUG</span><span class=p>,</span> <span class=n>DEV_STATUS</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.dbsession</span> <span class=kn>import</span> <span class=n>MainDatabaseManager</span>
+
+<span class=c1># Менеджера для РСУБД</span>
+<span class=n>DatabaseManager</span> <span class=o>=</span> <span class=n>MainDatabaseManager</span><span class=p>(</span><span class=n>DATABASE_URL</span><span class=p>,</span> <span class=n>echo</span><span class=o>=</span><span class=n>DEBUG</span><span class=p>,</span> <span class=n>DEV_STATUS</span><span class=o>=</span><span class=n>DEV_STATUS</span><span class=p>)</span>
+</code></pre></div> <h3 id=maindatabasemanager>Основанные компоненты <code>MainDatabaseManager</code></h3> <ul> <li> <p>Общие характеристики</p> <ul> <li><code>DEV_STATUS</code> - Индикатор режима разработки. При <code>DEV_STATUS=False</code> блокирует выполнение критических операций (<code>create_all</code>, <code>drop_all</code>, <code>clear_all</code>). Это мера безопасности для производственной среды.</li> </ul> </li> <li> <p>Синхронные компоненты</p> <ul> <li><code>database_url</code> - Адрес для подключения к синхронной базе данных.</li> <li><code>engine</code> - Механизм синхронного взаимодействия с БД.</li> <li><code>session</code> - Генератор синхронных сессий.</li> <li> <p><code>Base</code> - Базовый класс для моделей данных.</p> </li> <li> <p>Функциональность:</p> <ul> <li><code>get_session</code> - Инжектор сессии БД.</li> <li><code>get_session_transaction</code> - Инжектор сессии БД с поддержкой транзакций.</li> <li><code>create_all</code> - Инициализация всех таблиц в БД.</li> <li><code>drop_all</code> - Удаление всей структуры БД.</li> <li><code>clear_all</code> - Очистка содержимого таблиц. Параметр <code>exclude_tables_name</code> позволяет исключить определенные таблицы из процесса очистки.</li> </ul> </li> </ul> </li> <li> <p>Асинхронные компоненты</p> <ul> <li><code>adatabase_url</code> - Адрес для подключения к асинхронной БД.</li> <li><code>aengine</code> - Асинхронный механизм работы с БД, включая пул соединений.</li> <li> <p><code>asession</code> - Генератор асинхронных сессий.</p> </li> <li> <p>Функциональность:</p> <ul> <li><code>aget_session</code> - Асинхронный инжектор сессии БД.</li> <li><code>aget_session_transaction</code> - Асинхронный инжектор сессии БД с поддержкой транзакций.</li> </ul> </li> </ul> </li> </ul> <h3 id=use-ormasync>Use OrmAsync</h3> <p>Этот класс оптимизирует асинхронное взаимодействие с БД:</p> <ul> <li><code>get</code> - Извлечение объекта по заданным критериям.</li> <li><code>get_list</code> - Получение набора объектов по запросу. (С возможностью глубокой выборки)</li> <li><code>update</code> - Модификация объектов согласно запросу.</li> <li><code>delete</code> - Удаление объектов по заданным параметрам.</li> <li><code>get_item</code> - Извлечение объекта по первичному ключу. (С возможностью глубокой выборки)</li> <li><code>create_item</code> - Создание нового объекта. (С возможностью каскадного создания)</li> <li><code>update_item</code> - Обновление объекта по первичному ключу. (С возможностью каскадного обновления)</li> <li><code>delete_item</code> - Удаление объекта по первичному ключу. (С возможностью каскадного удаления)</li> <li><code>eager_refresh</code> - Полная загрузка всех связанных данных для объекта.</li> </ul> <blockquote> <p>Глубокая выборка/каскадные операции - это возможность работы со связанными данными. Активируется параметром <code>deep=True</code></p> <p>Примеры:</p> <ul> <li>get_list, get_item - Возвращают объекты со всеми связанными данными, готовые для использования в Pydantic</li> <li>create_item - Создает записи в связанных таблицах</li> <li>update_item - Обновляет данные в связанных таблицах</li> <li>delete_item - Удаляет записи из связанных таблиц</li> </ul> </blockquote> <h3 id=databasemanager>Создать модель через DatabaseManager</h3> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>sqlalchemy</span> <span class=kn>import</span> <span class=n>Column</span><span class=p>,</span> <span class=n>Integer</span><span class=p>,</span> <span class=n>String</span>
+
+<span class=kn>from</span> <span class=nn>app.db.base</span> <span class=kn>import</span> <span class=n>DatabaseManager</span>
+
+
+<span class=k>class</span> <span class=nc>User</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>Base</span><span class=p>):</span>
+    <span class=n>__tablename__</span> <span class=o>=</span> <span class=s2>&quot;users&quot;</span>
+
+    <span class=nb>id</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>Integer</span><span class=p>,</span> <span class=n>primary_key</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+    <span class=n>name</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+    <span class=n>login</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+    <span class=n>pthone</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+    <span class=n>email</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>,</span> <span class=n>unique</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</code></pre></div> <h3 id=crud-databasemanager>Выполнение CRUD через DatabaseManager</h3> <div class=highlight><pre><span></span><code><span class=c1># Асинхронный вариант</span>
+<span class=k>class</span> <span class=nc>FileView</span><span class=p>:</span>
+    <span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/file&quot;</span><span class=p>)</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>get_files</span><span class=p>(</span>
+        <span class=n>skip</span><span class=o>=</span><span class=n>Query</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+        <span class=n>limit</span><span class=o>=</span><span class=n>Query</span><span class=p>(</span><span class=mi>100</span><span class=p>),</span>
+        <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=n>File</span><span class=p>]:</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>get_list</span><span class=p>(</span><span class=n>select</span><span class=p>(</span><span class=n>FileDb</span><span class=p>)</span><span class=o>.</span><span class=n>offset</span><span class=p>(</span><span class=n>skip</span><span class=p>)</span><span class=o>.</span><span class=n>limit</span><span class=p>(</span><span class=n>limit</span><span class=p>))</span>
+
+    <span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/file/</span><span class=si>{file_uid}</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>get_file</span><span class=p>(</span>
+        <span class=n>file_uid</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Path</span><span class=p>(),</span>
+        <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>File</span><span class=p>:</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>select</span><span class=p>(</span><span class=n>FileDb</span><span class=p>)</span><span class=o>.</span><span class=n>filter</span><span class=p>(</span><span class=n>FileDb</span><span class=o>.</span><span class=n>uid</span> <span class=o>==</span> <span class=n>file_uid</span><span class=p>))</span>
+
+    <span class=nd>@router</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=s2>&quot;/file&quot;</span><span class=p>)</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>create_file</span><span class=p>(</span>
+        <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>File</span><span class=p>:</span>
+        <span class=n>file_uid</span> <span class=o>=</span> <span class=n>uuid</span><span class=o>.</span><span class=n>uuid4</span><span class=p>()</span>
+        <span class=n>new_user</span> <span class=o>=</span> <span class=n>FileDb</span><span class=p>(</span><span class=n>uid</span><span class=o>=</span><span class=n>file_uid</span><span class=p>)</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>create_item</span><span class=p>(</span><span class=n>new_user</span><span class=p>)</span>
+
+    <span class=nd>@router</span><span class=o>.</span><span class=n>put</span><span class=p>(</span><span class=s2>&quot;/file/</span><span class=si>{file_uid}</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>update_file</span><span class=p>(</span>
+        <span class=n>file_uid</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Path</span><span class=p>(),</span>
+        <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>File</span><span class=p>:</span>
+        <span class=n>update_data</span> <span class=o>=</span> <span class=p>{</span><span class=s2>&quot;filename&quot;</span><span class=p>:</span> <span class=s2>&quot;new&quot;</span><span class=p>}</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>update</span><span class=p>(</span>
+            <span class=n>update</span><span class=p>(</span><span class=n>FileDb</span><span class=p>)</span><span class=o>.</span><span class=n>filter</span><span class=p>(</span><span class=n>FileDb</span><span class=o>.</span><span class=n>uid</span> <span class=o>==</span> <span class=n>file_uid</span><span class=p>),</span> <span class=n>update_data</span>
+        <span class=p>)</span>
+
+    <span class=nd>@router</span><span class=o>.</span><span class=n>delete</span><span class=p>(</span><span class=s2>&quot;/file/</span><span class=si>{file_uid}</span><span class=s2>&quot;</span><span class=p>)</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>delte_file</span><span class=p>(</span>
+        <span class=n>file_uid</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Path</span><span class=p>(),</span>
+        <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+    <span class=p>):</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>delete</span><span class=p>(</span><span class=n>delete</span><span class=p>(</span><span class=n>FileDb</span><span class=p>)</span><span class=o>.</span><span class=n>filter</span><span class=p>(</span><span class=n>FileDb</span><span class=o>.</span><span class=n>uid</span> <span class=o>==</span> <span class=n>file_uid</span><span class=p>))</span>
+
+<span class=c1># Синхронный вариант</span>
+<span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/file-sync&quot;</span><span class=p>)</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>get_file_sync</span><span class=p>(</span>
+    <span class=n>session</span><span class=p>:</span> <span class=n>Session</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>get_session</span><span class=p>),</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=n>File</span><span class=p>]:</span>
+    <span class=n>skip</span> <span class=o>=</span> <span class=mi>0</span>
+    <span class=n>limit</span> <span class=o>=</span> <span class=mi>100</span>
+    <span class=n>res</span> <span class=o>=</span> <span class=n>session</span><span class=o>.</span><span class=n>query</span><span class=p>(</span><span class=n>FileDb</span><span class=p>)</span><span class=o>.</span><span class=n>offset</span><span class=p>(</span><span class=n>skip</span><span class=p>)</span><span class=o>.</span><span class=n>limit</span><span class=p>(</span><span class=n>limit</span><span class=p>)</span><span class=o>.</span><span class=n>all</span><span class=p>()</span>
+    <span class=k>return</span> <span class=n>res</span>
+</code></pre></div> <h3 id=alembic>Работа с миграциями через Alembic</h3> <ol> <li>Установка</li> </ol> <div class=highlight><pre><span></span><code>poetry<span class=w> </span>add<span class=w> </span>alembic
+</code></pre></div> <ol> <li>Инициализация проекта</li> </ol> <div class=highlight><pre><span></span><code>alembic<span class=w> </span>init<span class=w> </span>alembic
+</code></pre></div> <ol> <li>Изменить <code>alembic/env.py</code></li> </ol> <div class=highlight><pre><span></span><code><span class=c1># Импортируем менеджера БД</span>
+<span class=kn>from</span> <span class=nn>app.core.db</span> <span class=kn>import</span> <span class=n>DatabaseManager</span>
+
+<span class=c1># &gt; ! Импортировать модели которые нужно отлеживать</span>
+<span class=kn>from</span> <span class=nn>app.models</span> <span class=kn>import</span> <span class=o>*</span>  <span class=c1># noqa F401</span>
+
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.pattern.pattern_alembic</span> <span class=kn>import</span> <span class=n>AlembicEnv</span>
+
+<span class=c1># Преднастоенная логика для создания и выполнения миграций чрез Alembic</span>
+<span class=n>AlembicEnv</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=p>)</span><span class=o>.</span><span class=n>run</span><span class=p>()</span>
+</code></pre></div> <ol> <li>Можем изменить <code>alembic.ini</code></li> </ol> <div class=highlight><pre><span></span><code><span class=c1># Формат для названия файла с миграцией</span>
+<span class=na>file_template</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>%%(year)d_%%(month).2d_%%(day).2d_%%(hour).2d%%(minute).2d-%%(rev)s_%%(slug)s</span>
+</code></pre></div> <blockquote> <p>Важный аспект поиска миграций</p> <p>Нужно чтобы модели быть импортированы в <code>alembic/env.py</code> чтобы эти модели записали свои данные в <code>Base.metadata</code></p> <p>Поэтому нужно:</p> <ol> <li>В <code>app.models.__init__.py</code> импортируем все модели</li> </ol> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>.files</span> <span class=kn>import</span> <span class=o>*</span>
+<span class=kn>from</span> <span class=nn>.users</span> <span class=kn>import</span> <span class=o>*</span>
+</code></pre></div> <ol> <li>В <code>alembic/env.py</code> импортировать все(или только конкретные) модели</li> </ol> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>app.models</span> <span class=kn>import</span> <span class=o>*</span>
+</code></pre></div> </blockquote> <ol> <li>Создавайте миграции и применяйте их</li> </ol> <div class=highlight><pre><span></span><code><span class=c1># Создавайте миграцию</span>
+alembic<span class=w> </span>revision<span class=w> </span>--autogenerate
+<span class=c1># Применить миграцию к БД</span>
+alembic<span class=w> </span>upgrade<span class=w> </span>head
+</code></pre></div> <h2 id=use-cache>Use Cache</h2> <ul> <li>Предварительная настройка, заполнить файл <code>app/core/cache.py</code>:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>import</span> <span class=nn>redis.asyncio</span> <span class=k>as</span> <span class=nn>redis</span>
+
+<span class=kn>from</span> <span class=nn>app.core.config</span> <span class=kn>import</span> <span class=n>REDIS_URL</span>
+
+<span class=c1># Создаем глобальный объект Redis</span>
+<span class=n>redis_client</span> <span class=o>=</span> <span class=n>redis</span><span class=o>.</span><span class=n>from_url</span><span class=p>(</span><span class=n>REDIS_URL</span><span class=p>,</span> <span class=n>encoding</span><span class=o>=</span><span class=s2>&quot;utf-8&quot;</span><span class=p>,</span> <span class=n>decode_responses</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</code></pre></div> <ul> <li>Вы можете использовать кеширование API ответа через декоратор <code>@cache_redis()</code></li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>datetime</span> <span class=kn>import</span> <span class=n>timedelta</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.cache</span> <span class=kn>import</span> <span class=n>cache_redis</span>
+
+<span class=nd>@app</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;files/</span><span class=se>{{</span><span class=s2>item_id</span><span class=se>}}</span><span class=s2>&quot;</span><span class=p>)</span>
+<span class=nd>@cache_redis</span><span class=p>(</span><span class=n>cache_class</span><span class=o>=</span><span class=n>redis_client</span><span class=p>,</span> <span class=n>cache_ttl</span><span class=o>=</span><span class=n>timedelta</span><span class=p>(</span><span class=n>minutes</span><span class=o>=</span><span class=mi>10</span><span class=p>))</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>get_item</span><span class=p>(</span>
+    <span class=n>request</span><span class=p>:</span> <span class=n>Request</span><span class=p>,</span>
+    <span class=n>item_uid</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Path</span><span class=p>(</span><span class=o>...</span><span class=p>),</span>
+    <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>DatabaseManager</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>FilesSchema</span><span class=p>:</span>
+    <span class=n>response</span> <span class=o>=</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>get</span><span class=p>(</span>
+        <span class=n>select</span><span class=p>(</span><span class=n>Files</span><span class=p>)</span><span class=o>.</span><span class=n>filter</span><span class=p>(</span><span class=n>Files</span><span class=o>.</span><span class=n>id</span> <span class=o>==</span> <span class=n>item_uid</span><span class=p>)</span>
+    <span class=p>)</span>
+    <span class=k>return</span> <span class=n>response</span>
+</code></pre></div> <h2 id=use-viewset>Use ViewSet</h2> <ol> <li>Создадим например <code>app/api/v1/router.py</code></li> </ol> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>datetime</span> <span class=kn>import</span> <span class=n>timedelta</span>
+<span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>List</span>
+<span class=kn>from</span> <span class=nn>uuid</span> <span class=kn>import</span> <span class=n>UUID</span>
+
+<span class=kn>from</span> <span class=nn>fastapi</span> <span class=kn>import</span> <span class=n>APIRouter</span><span class=p>,</span> <span class=n>Depends</span><span class=p>,</span> <span class=n>Query</span>
+<span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>BaseModel</span>
+<span class=kn>from</span> <span class=nn>sqlalchemy</span> <span class=kn>import</span> <span class=n>select</span>
+<span class=kn>from</span> <span class=nn>sqlalchemy.orm</span> <span class=kn>import</span> <span class=n>Session</span>
+
+<span class=kn>from</span> <span class=nn>app.api.v1.schemas.file</span> <span class=kn>import</span> <span class=n>File</span>
+<span class=kn>from</span> <span class=nn>app.api.v1.schemas.timemeasurement</span> <span class=kn>import</span> <span class=n>TaskExecution</span>
+<span class=kn>from</span> <span class=nn>app.api.v1.schemas.user</span> <span class=kn>import</span> <span class=n>User</span>
+<span class=kn>from</span> <span class=nn>app.core.cache</span> <span class=kn>import</span> <span class=n>redis_client</span>
+<span class=kn>from</span> <span class=nn>app.core.db</span> <span class=kn>import</span> <span class=n>DatabaseManager</span>
+<span class=kn>from</span> <span class=nn>app.models.file</span> <span class=kn>import</span> <span class=n>File</span> <span class=k>as</span> <span class=n>FileDb</span>
+<span class=kn>from</span> <span class=nn>app.models.timemeasurement</span> <span class=kn>import</span> <span class=n>TaskExecution</span> <span class=k>as</span> <span class=n>TaskExecutionDb</span>
+<span class=kn>from</span> <span class=nn>app.models.users</span> <span class=kn>import</span> <span class=n>User</span> <span class=k>as</span> <span class=n>UserDb</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.auth_jwt</span> <span class=kn>import</span> <span class=n>jwt_auth</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.db.dbsession</span> <span class=kn>import</span> <span class=n>OrmAsync</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.paginator</span> <span class=kn>import</span> <span class=n>DefaultPaginator</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.viewset</span> <span class=kn>import</span> <span class=n>AppOrm</span><span class=p>,</span> <span class=n>FullViewSet</span>
+
+<span class=n>router</span> <span class=o>=</span> <span class=n>APIRouter</span><span class=p>(</span><span class=n>prefix</span><span class=o>=</span><span class=s2>&quot;/api/v1&quot;</span><span class=p>)</span>
+
+<span class=k>class</span> <span class=nc>FileViewSet</span><span class=p>(</span><span class=n>FullViewSet</span><span class=p>):</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;</span>
+<span class=sd>    Представление для работы с файлами</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+
+    <span class=c1># Модель БД</span>
+    <span class=n>db_model</span> <span class=o>=</span> <span class=n>FileDb</span>
+    <span class=c1># Модель Схемы</span>
+    <span class=n>pydantic_model</span> <span class=o>=</span> <span class=n>File</span>
+    <span class=c1># Кеширование</span>
+    <span class=n>cache_class</span> <span class=o>=</span> <span class=n>redis_client</span>
+    <span class=n>cache_ttl</span> <span class=o>=</span> <span class=n>timedelta</span><span class=p>(</span><span class=n>minutes</span><span class=o>=</span><span class=mi>10</span><span class=p>)</span>
+    <span class=c1># Пагинация</span>
+    <span class=n>paginator_class</span> <span class=o>=</span> <span class=n>DefaultPaginator</span>
+
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>db_update</span><span class=p>(</span>
+        <span class=bp>self</span><span class=p>,</span> <span class=n>item_id</span><span class=p>:</span> <span class=nb>str</span> <span class=o>|</span> <span class=nb>int</span> <span class=o>|</span> <span class=n>UUID</span><span class=p>,</span> <span class=n>item</span><span class=p>:</span> <span class=nb>type</span><span class=p>[</span><span class=n>BaseModel</span><span class=p>],</span> <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>object</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Переопределение метода db_update&quot;&quot;&quot;</span>
+        <span class=k>return</span> <span class=k>await</span> <span class=nb>super</span><span class=p>()</span><span class=o>.</span><span class=n>db_update</span><span class=p>(</span><span class=n>item_id</span><span class=p>,</span> <span class=n>item</span><span class=p>,</span> <span class=n>aorm</span><span class=p>)</span>
+
+
+<span class=k>class</span> <span class=nc>UserViewSet</span><span class=p>(</span><span class=n>FullViewSet</span><span class=p>):</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;</span>
+<span class=sd>    Представление для работы с пользователями</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+
+    <span class=c1># Модель БД</span>
+    <span class=n>db_model</span> <span class=o>=</span> <span class=n>UserDb</span>
+    <span class=c1># Модель Схемы</span>
+    <span class=n>pydantic_model</span> <span class=o>=</span> <span class=n>User</span>
+
+    <span class=k>def</span> <span class=nf>list</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Переопределение метода list&quot;&quot;&quot;</span>
+
+        <span class=nd>@self</span><span class=o>.</span><span class=n>router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;</span><span class=si>{</span><span class=bp>self</span><span class=o>.</span><span class=n>prefix</span><span class=si>}</span><span class=s2>&quot;</span><span class=p>,</span> <span class=n>tags</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>tags</span><span class=p>)</span>
+        <span class=k>async</span> <span class=k>def</span> <span class=nf>get_list_items</span><span class=p>(</span>
+            <span class=n>skip</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=n>Query</span><span class=p>(</span><span class=mi>0</span><span class=p>),</span>
+            <span class=n>limit</span><span class=p>:</span> <span class=nb>int</span> <span class=o>=</span> <span class=n>Query</span><span class=p>(</span><span class=mi>100</span><span class=p>),</span>
+            <span class=n>aorm</span><span class=p>:</span> <span class=n>OrmAsync</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>AppOrm</span><span class=o>.</span><span class=n>aget_orm</span><span class=p>),</span>
+        <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>List</span><span class=p>[</span><span class=bp>self</span><span class=o>.</span><span class=n>pydantic_model</span><span class=p>]:</span>
+            <span class=k>return</span> <span class=k>await</span> <span class=n>aorm</span><span class=o>.</span><span class=n>get_list</span><span class=p>(</span>
+                <span class=n>select</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>db_model</span><span class=p>)</span><span class=o>.</span><span class=n>offset</span><span class=p>(</span><span class=n>skip</span><span class=p>)</span><span class=o>.</span><span class=n>limit</span><span class=p>(</span><span class=n>limit</span><span class=p>),</span>
+                <span class=n>deep</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>deep_schema</span><span class=p>,</span>
+                <span class=n>db_model</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>db_model</span><span class=p>,</span>
+            <span class=p>)</span>
+        <span class=k>return</span> <span class=n>get_list_items</span>
+
+<span class=k>class</span> <span class=nc>TaskExecutionViewSet</span><span class=p>(</span><span class=n>FullViewSet</span><span class=p>):</span>
+<span class=w>    </span><span class=sd>&quot;&quot;&quot;</span>
+<span class=sd>    Представление для работы трудозатратами</span>
+<span class=sd>    &quot;&quot;&quot;</span>
+
+    <span class=c1># Модель БД</span>
+    <span class=n>db_model</span> <span class=o>=</span> <span class=n>TaskExecutionDb</span>
+    <span class=c1># Модель Схемы</span>
+    <span class=n>pydantic_model</span> <span class=o>=</span> <span class=n>TaskExecution</span>
+
+    <span class=c1># Пагинация</span>
+    <span class=n>paginator_class</span> <span class=o>=</span> <span class=n>DefaultPaginator</span>
+
+    <span class=c1># Включить поддержку вложенных схем pydantic</span>
+    <span class=c1># это значит что будет происходить рекурсивное</span>
+    <span class=c1># создание, обновление, удаление связанных записей</span>
+    <span class=n>deep_schema</span> <span class=o>=</span> <span class=kc>True</span>
+
+    <span class=c1># Включить защиту через JWT</span>
+    <span class=n>dependencies</span> <span class=o>=</span> <span class=p>[</span><span class=n>Depends</span><span class=p>(</span><span class=n>jwt_auth</span><span class=p>)]</span>
+
+<span class=c1># Подключить ViewSet</span>
+<span class=n>router</span><span class=o>.</span><span class=n>views</span> <span class=o>=</span> <span class=p>[</span>
+    <span class=n>FileViewSet</span><span class=p>()</span><span class=o>.</span><span class=n>as_view</span><span class=p>(</span><span class=n>router</span><span class=p>,</span> <span class=n>prefix</span><span class=o>=</span><span class=s2>&quot;/file&quot;</span><span class=p>),</span>
+    <span class=n>UserViewSet</span><span class=p>()</span><span class=o>.</span><span class=n>as_view</span><span class=p>(</span><span class=n>router</span><span class=p>,</span> <span class=n>prefix</span><span class=o>=</span><span class=s2>&quot;/user&quot;</span><span class=p>),</span>
+    <span class=n>TaskExecutionViewSet</span><span class=p>()</span><span class=o>.</span><span class=n>as_view</span><span class=p>(</span><span class=n>router</span><span class=p>,</span> <span class=n>prefix</span><span class=o>=</span><span class=s2>&quot;/taskexecution&quot;</span><span class=p>),</span>
+<span class=p>]</span>
+</code></pre></div> <h2 id=use-time-zone>Use Time Zone</h2> <p>Получить текущие время сервера с учётом его временной зоны</p> <div class=highlight><pre><span></span><code><span class=kn>import</span> <span class=nn>pytz</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.timezone</span> <span class=kn>import</span> <span class=n>get_datetime_now</span>
+
+<span class=c1># Вариант 1</span>
+<span class=n>get_datetime_now</span><span class=p>(</span><span class=n>request</span><span class=o>.</span><span class=n>app</span><span class=o>.</span><span class=n>state</span><span class=o>.</span><span class=n>TIMEZONE</span><span class=p>)</span><span class=o>.</span><span class=n>isoformat</span><span class=p>()</span>
+<span class=c1># Вариант 2</span>
+<span class=n>get_datetime_now</span><span class=p>(</span><span class=n>app</span><span class=o>.</span><span class=n>state</span><span class=o>.</span><span class=n>TIMEZONE</span><span class=p>)</span><span class=o>.</span><span class=n>isoformat</span><span class=p>()</span>
+<span class=c1># Вариант 3</span>
+<span class=n>get_datetime_now</span><span class=p>(</span><span class=n>pytz</span><span class=o>.</span><span class=n>timezone</span><span class=p>(</span><span class=s2>&quot;Europe/Moscow&quot;</span><span class=p>))</span><span class=o>.</span><span class=n>isoformat</span><span class=p>()</span>
+<span class=c1># Вариант 4</span>
+<span class=n>timezone</span> <span class=o>=</span> <span class=n>TIMEZONE</span><span class=p>()</span> <span class=ow>or</span> <span class=n>TIMEZONE</span><span class=p>(</span><span class=n>request</span><span class=o>.</span><span class=n>app</span><span class=p>)</span>
+<span class=n>get_datetime_now</span><span class=p>(</span><span class=n>timezone</span><span class=p>)</span><span class=o>.</span><span class=n>isoformat</span><span class=p>()</span>
+</code></pre></div> <h2 id=use-httpexception>Use HTTPException</h2> <ul> <li>Использование:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>fastapi_accelerator.exception</span> <span class=kn>import</span> <span class=n>HTTPException403</span>
+
+<span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/&quot;</span><span class=p>)</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>get_users</span><span class=p>():</span>
+    <span class=k>if</span> <span class=kc>True</span><span class=p>:</span>
+        <span class=k>raise</span> <span class=n>HTTPException403</span><span class=p>()</span>
+    <span class=k>return</span> <span class=p>[{</span><span class=s2>&quot;user_id&quot;</span><span class=p>:</span> <span class=s2>&quot;user1&quot;</span><span class=p>},</span> <span class=p>{</span><span class=s2>&quot;user_id&quot;</span><span class=p>:</span> <span class=s2>&quot;user2&quot;</span><span class=p>}]</span>
+</code></pre></div> <h2 id=use-authjwt>Use AuthJWT</h2> <p>Использование аутентификация через JWT</p> <ul> <li>Подключить к FastAPI проекту:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>fastapi_accelerator.auth_jwt</span> <span class=kn>import</span> <span class=n>BaseAuthJWT</span>
+
+<span class=k>class</span> <span class=nc>AuthJWT</span><span class=p>(</span><span class=n>BaseAuthJWT</span><span class=p>):</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>check_auth</span><span class=p>(</span><span class=n>username</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>password</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>bool</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Проверка введенного логина и пароля.&quot;&quot;&quot;</span>
+        <span class=k>return</span> <span class=n>username</span> <span class=o>==</span> <span class=s2>&quot;admin&quot;</span> <span class=ow>and</span> <span class=n>password</span> <span class=o>==</span> <span class=s2>&quot;admin&quot;</span>
+
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>add_jwt_body</span><span class=p>(</span><span class=n>username</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=nb>dict</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Функция для добавление дополнительных данных в JWT токен пользователя&quot;&quot;&quot;</span>
+        <span class=k>return</span> <span class=p>{</span><span class=s2>&quot;version&quot;</span><span class=p>:</span> <span class=n>username</span><span class=o>.</span><span class=n>title</span><span class=p>()}</span>
+
+
+<span class=c1># Подключить аутентификацию по JWT</span>
+<span class=n>AuthJWT</span><span class=o>.</span><span class=n>mount_auth</span><span class=p>(</span><span class=n>app</span><span class=p>)</span>
+</code></pre></div> <ul> <li>Пример защиты API метода:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>fastapi_accelerator.auth_jwt</span> <span class=kn>import</span> <span class=n>jwt_auth</span>
+
+<span class=nd>@app</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/check_protected&quot;</span><span class=p>,</span> <span class=n>summary</span><span class=o>=</span><span class=s2>&quot;Проверить аутентификацию по JWT&quot;</span><span class=p>)</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>protected_route</span><span class=p>(</span><span class=n>jwt</span><span class=p>:</span> <span class=nb>dict</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>jwt_auth</span><span class=p>)):</span>
+    <span class=k>return</span> <span class=p>{</span><span class=s2>&quot;message&quot;</span><span class=p>:</span> <span class=s2>&quot;This is a protected route&quot;</span><span class=p>,</span> <span class=s2>&quot;user&quot;</span><span class=p>:</span> <span class=n>jwt</span><span class=p>}</span>
+</code></pre></div> <h2 id=use-integration>Use Integration</h2> <p>Большинство API-сервисов взаимодействуют с другими API или gRPC/RPC сервисами. Такие интеграции могут быть сложными и часто оказываются не полностью понятно разработчикам. Из-за этого они легко превращаются в легаси-код, который сложно поддерживать, а тестирование интеграций локально зачастую невозможно.</p> <p>Важно, чтобы в проекте была библиотека, следящая за качеством написания интеграций и заставляющая документировать их для упрощения дальнейшей поддержки. Именно для этого я разработал специальные модули:</p> <ul> <li><code>IntegrationHTTP</code>: Класс для создания интеграций по HTTP.</li> <li><code>Stability Patterns</code>: Паттернов стабильности для применения к методам интеграции.</li> <li><code>py2dantic</code>: Утилита для перевода Python dict в Pydantic схему.</li> <li><code>docintegration</code>: Авто генерация документации, для используемых интеграций.</li> </ul> <h3 id=use-integration-http>Use Integration HTTP</h3> <p><code>IntegrationHTTP</code> - Класс для создания методов интеграции по HTTP, централизует логику вызовов к внешним системам, проводя валидацию исходящих данных. Также в классе указывается версия и документация внешнего API.</p> <p>Преимущества использования этого подхода:</p> <ul> <li>Явная спецификация форматов запроса и ответа.</li> <li>Легкая переносимость кода между проектами — достаточно импортировать классы, основанные на <code>IntegrationHTTP</code>.</li> <li>Консолидация логики внешних запросов в одном месте, что упрощает поддержку.</li> <li>Возможность легко заменять реальные методы на <code>mock</code> для тестирования.</li> <li>Легкое внедрение <code>Stability Patterns</code> для методов интеграции.</li> </ul> <p>Для создания интеграции следуйте следующим шагам:</p> <ol> <li>Рекомендуется располагать код интеграций в директории <code>app/integration/ИмяПакетаИнтеграции</code>.</li> <li> <p>Создать класса интеграций <code>app/integration/ИмяПакетаИнтеграции/endpoint.py</code>:</p> <div class=highlight><pre><span></span><code><span class=kn>import</span> <span class=nn>httpx</span>
+<span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>BaseModel</span>
+
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.integration.http_integration</span> <span class=kn>import</span> <span class=p>(</span>
+    <span class=n>ApiHTTP</span><span class=p>,</span>
+    <span class=n>EndpointsDeclaration</span><span class=p>,</span>
+    <span class=n>HTTPMethod</span><span class=p>,</span>
+    <span class=n>IntegrationHTTP</span><span class=p>,</span>
+<span class=p>)</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.integration.stability_patterns</span> <span class=kn>import</span> <span class=n>sp</span>
+
+<span class=k>class</span> <span class=nc>ИмяIntegration</span><span class=p>(</span><span class=n>EndpointsDeclaration</span><span class=p>):</span>
+
+    <span class=n>integration</span> <span class=o>=</span> <span class=n>IntegrationHTTP</span><span class=p>(</span>
+        <span class=s2>&quot;Имя Интеграции&quot;</span><span class=p>,</span>
+        <span class=n>doc</span><span class=o>=</span><span class=s2>&quot;Интеграция с ... API&quot;</span><span class=p>,</span>
+    <span class=p>)</span>
+
+    <span class=k>class</span> <span class=nc>Schema</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Схемы Pydantic для успешных ответов&quot;&quot;&quot;</span>
+
+        <span class=k>class</span> <span class=nc>Successful</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>)</span>
+            <span class=n>body</span><span class=p>:</span> <span class=nb>str</span>
+
+    <span class=k>class</span> <span class=nc>SchemaError</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Схемы Pydantic для не успешных ответов&quot;&quot;&quot;</span>
+
+        <span class=k>class</span> <span class=nc>http400</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>)</span>
+            <span class=n>error</span><span class=p>:</span> <span class=nb>str</span>
+
+    <span class=nd>@integration</span><span class=o>.</span><span class=n>endpoint</span><span class=p>(</span>
+        <span class=n>HTTPMethod</span><span class=o>.</span><span class=n>post</span><span class=p>,</span>
+        <span class=s2>&quot;/путь&quot;</span><span class=p>,</span>
+        <span class=n>version</span><span class=o>=</span><span class=s2>&quot;...&quot;</span><span class=p>,</span>
+        <span class=n>docurl</span><span class=o>=</span><span class=s2>&quot;https://...&quot;</span>
+    <span class=p>)</span>
+    <span class=nd>@sp</span><span class=o>.</span><span class=n>RetryPattern</span><span class=p>()</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>имя_метода</span><span class=p>(</span><span class=n>api</span><span class=p>:</span> <span class=n>ApiHTTP</span><span class=p>,</span> <span class=n>аргумент_1</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Schema</span><span class=o>.</span><span class=n>Successful</span> <span class=o>|</span> <span class=n>SchemaError</span><span class=o>.</span><span class=n>http400</span><span class=p>:</span>
+        <span class=k>try</span><span class=p>:</span>
+            <span class=n>response</span><span class=p>:</span> <span class=n>httpx</span><span class=o>.</span><span class=n>Response</span> <span class=o>=</span> <span class=k>await</span> <span class=n>api</span><span class=o>.</span><span class=n>client</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=n>api</span><span class=o>.</span><span class=n>url</span><span class=o>.</span><span class=n>geturl</span><span class=p>(),</span> <span class=n>json</span><span class=o>=...</span><span class=p>)</span>
+            <span class=k>return</span> <span class=n>response</span><span class=o>.</span><span class=n>json</span><span class=p>()</span>
+        <span class=k>except</span> <span class=n>httpx</span><span class=o>.</span><span class=n>RequestError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+            <span class=k>raise</span> <span class=n>e</span>
+</code></pre></div> </li> <li> <p>Настроить и подключить интеграции к проекту <code>app/core/useintegration.py</code>:</p> <div class=highlight><pre><span></span><code><span class=sd>&quot;&quot;&quot;Интеграции используемые в проекте&quot;&quot;&quot;</span>
+
+<span class=kn>from</span> <span class=nn>app.integration.ИмяПакетаИнтеграции.endpoint</span> <span class=kn>import</span> <span class=n>ИмяIntegration</span>
+
+<span class=c1># Создание экземпляра интеграции</span>
+<span class=n>имя_api</span> <span class=o>=</span> <span class=n>ИмяIntegration</span><span class=p>(</span>
+    <span class=c1># Начало для url пути</span>
+    <span class=n>base_url</span><span class=o>=</span><span class=s2>&quot;https://путь...&quot;</span><span class=p>,</span>
+    <span class=c1># Доступы, которые можем использовать в методах интеграции</span>
+    <span class=n>credentials</span><span class=o>=</span><span class=p>{</span><span class=o>...</span><span class=p>},</span>
+<span class=p>)</span>
+</code></pre></div> </li> <li> <p>Пример использования класса интеграции в <code>FastAPI</code>:</p> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>app.core.useintegration</span> <span class=kn>import</span> <span class=n>имя_api</span>
+<span class=kn>from</span> <span class=nn>app.integration.ИмяПакетаИнтеграции.schema</span> <span class=kn>import</span> <span class=n>ИмяSchema</span>
+
+<span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/имя&quot;</span><span class=p>)</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>имя</span><span class=p>(</span><span class=n>аргумент_1</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>ИмяIntegration</span><span class=o>.</span><span class=n>Schema</span><span class=o>.</span><span class=n>Successful</span><span class=p>:</span>
+    <span class=c1># Вызвать метод интеграции</span>
+    <span class=k>return</span> <span class=k>await</span> <span class=n>имя_api</span><span class=o>.</span><span class=n>имя_метода</span><span class=p>(</span><span class=n>аргумент_1</span><span class=p>)</span>
+</code></pre></div> </li> </ol> <hr> <p>Вам необходимо указывать тип возвращаемого объекта из метода интеграции.</p> <p>Ответ может быть:</p> <ul> <li><code>dict</code>: который можно конвертировать в одну схему <code>Pydantic</code>.</li> <li><code>list[dict]</code>: который можно конвертировать в список схем <code>Pydantic</code>.</li> <li>Несколько типов ответа: Это необходимо для указания типа корректного ответа и для обработки ошибок. Например, <code>-&gt; УспешныйОтвет | НеУспешныйОтвет</code> или <code>-&gt; list[УспешныйОтвет] | НеУспешныйОтвет</code>.</li> <li>В худшем случае можете указать <code>Any</code>.</li> </ul> <h4 id=google-translate>Пример интеграции с Google Translate</h4> <ul> <li>Класса интеграции <code>app/integration/google_translate/endpoint.py</code>:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>import</span> <span class=nn>httpx</span>
+<span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>BaseModel</span>
+
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.integration.http_integration</span> <span class=kn>import</span> <span class=p>(</span>
+    <span class=n>ApiHTTP</span><span class=p>,</span>
+    <span class=n>EndpointsDeclaration</span><span class=p>,</span>
+    <span class=n>HTTPMethod</span><span class=p>,</span>
+    <span class=n>IntegrationHTTP</span><span class=p>,</span>
+<span class=p>)</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.integration.stability_patterns</span> <span class=kn>import</span> <span class=n>sp</span>
+
+
+<span class=k>class</span> <span class=nc>GoogleTranslateEndpoints</span><span class=p>(</span><span class=n>EndpointsDeclaration</span><span class=p>):</span>
+    <span class=n>integration</span> <span class=o>=</span> <span class=n>IntegrationHTTP</span><span class=p>(</span>
+        <span class=s2>&quot;Google Translate&quot;</span><span class=p>,</span>
+        <span class=n>doc</span><span class=o>=</span><span class=s2>&quot;Интеграция с Google Translate API&quot;</span><span class=p>,</span>
+    <span class=p>)</span>
+
+    <span class=k>class</span> <span class=nc>Schema</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Схемы для успешных ответов&quot;&quot;&quot;</span>
+
+        <span class=k>class</span> <span class=nc>TranslateV2</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+            <span class=n>text</span><span class=p>:</span> <span class=nb>str</span>
+
+    <span class=k>class</span> <span class=nc>SchemaError</span><span class=p>:</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Схемы для не успешных ответов&quot;&quot;&quot;</span>
+
+        <span class=k>class</span> <span class=nc>http400Error</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+            <span class=n>code</span><span class=p>:</span> <span class=nb>int</span>
+            <span class=n>message</span><span class=p>:</span> <span class=nb>str</span>
+            <span class=n>errors</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>dict</span><span class=p>]</span>
+            <span class=n>status</span><span class=p>:</span> <span class=nb>str</span>
+            <span class=n>details</span><span class=p>:</span> <span class=nb>list</span><span class=p>[</span><span class=nb>dict</span><span class=p>]</span>
+
+        <span class=k>class</span> <span class=nc>http400</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+            <span class=n>error</span><span class=p>:</span> <span class=nb>dict</span>
+
+    <span class=nd>@integration</span><span class=o>.</span><span class=n>endpoint</span><span class=p>(</span>
+        <span class=n>HTTPMethod</span><span class=o>.</span><span class=n>post</span><span class=p>,</span>
+        <span class=s2>&quot;/v1/translateHtml&quot;</span><span class=p>,</span>
+        <span class=n>version</span><span class=o>=</span><span class=s2>&quot;v2&quot;</span><span class=p>,</span>
+        <span class=n>docurl</span><span class=o>=</span><span class=s2>&quot;https://cloud.google.com/translate/docs/reference/rest&quot;</span><span class=p>,</span>
+    <span class=p>)</span>
+    <span class=c1># Применяем паттерны стабильности</span>
+    <span class=nd>@sp</span><span class=o>.</span><span class=n>Timeout</span><span class=p>()</span>
+    <span class=c1># Автоматически повторяет запрос при возникновении ошибки.</span>
+    <span class=nd>@sp</span><span class=o>.</span><span class=n>RetryPattern</span><span class=p>()</span>
+    <span class=k>async</span> <span class=k>def</span> <span class=nf>translate</span><span class=p>(</span>
+        <span class=n>api</span><span class=p>:</span> <span class=n>ApiHTTP</span><span class=p>,</span>
+        <span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+        <span class=n>from_lang</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+        <span class=n>to_lang</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span>
+    <span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Schema</span><span class=o>.</span><span class=n>TranslateV2</span> <span class=o>|</span> <span class=n>SchemaError</span><span class=o>.</span><span class=n>http400</span><span class=p>:</span>  <span class=c1># Указать типа ответа</span>
+<span class=w>        </span><span class=sd>&quot;&quot;&quot;Перевод текста с помощью Google Translate&quot;&quot;&quot;</span>
+        <span class=k>try</span><span class=p>:</span>
+            <span class=c1># Выполнить запрос к внешней системе</span>
+            <span class=n>response</span><span class=p>:</span> <span class=n>httpx</span><span class=o>.</span><span class=n>Response</span> <span class=o>=</span> <span class=k>await</span> <span class=n>api</span><span class=o>.</span><span class=n>client</span><span class=o>.</span><span class=n>post</span><span class=p>(</span>
+                <span class=n>api</span><span class=o>.</span><span class=n>url</span><span class=o>.</span><span class=n>geturl</span><span class=p>(),</span>
+                <span class=n>json</span><span class=o>=</span><span class=p>[[</span><span class=n>text</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s2>&quot;</span><span class=se>\n</span><span class=s2>&quot;</span><span class=p>),</span> <span class=n>from_lang</span><span class=p>,</span> <span class=n>to_lang</span><span class=p>],</span> <span class=s2>&quot;te_lib&quot;</span><span class=p>],</span>
+                <span class=n>headers</span><span class=o>=</span><span class=p>{</span>
+                    <span class=s2>&quot;content-type&quot;</span><span class=p>:</span> <span class=s2>&quot;application/json+protobuf&quot;</span><span class=p>,</span>
+                    <span class=s2>&quot;x-goog-api-key&quot;</span><span class=p>:</span> <span class=n>api</span><span class=o>.</span><span class=n>credentials</span><span class=p>[</span><span class=s2>&quot;API_TOKEN&quot;</span><span class=p>],</span>
+                <span class=p>},</span>
+            <span class=p>)</span>
+            <span class=c1># Обработка ответа</span>
+            <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;Processed </span><span class=si>{</span><span class=n>api</span><span class=o>.</span><span class=n>url</span><span class=si>}</span><span class=s2>: Status </span><span class=si>{</span><span class=n>response</span><span class=o>.</span><span class=n>status_code</span><span class=si>}</span><span class=s2>&quot;</span><span class=p>)</span>
+            <span class=k>return</span> <span class=p>{</span><span class=s2>&quot;text&quot;</span><span class=p>:</span> <span class=s2>&quot;</span><span class=se>\n</span><span class=s2>&quot;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>x</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=k>for</span> <span class=n>x</span> <span class=ow>in</span> <span class=n>response</span><span class=o>.</span><span class=n>json</span><span class=p>())}</span>
+        <span class=k>except</span> <span class=n>httpx</span><span class=o>.</span><span class=n>RequestError</span> <span class=k>as</span> <span class=n>e</span><span class=p>:</span>
+            <span class=nb>print</span><span class=p>(</span><span class=sa>f</span><span class=s2>&quot;Error processing </span><span class=si>{</span><span class=n>api</span><span class=o>.</span><span class=n>url</span><span class=si>}</span><span class=s2>: </span><span class=si>{</span><span class=n>e</span><span class=si>}</span><span class=s2>&quot;</span><span class=p>)</span>
+            <span class=k>raise</span> <span class=n>e</span>
+</code></pre></div> <ul> <li>Подключение в <code>app/core/useintegration.py</code>:</li> </ul> <div class=highlight><pre><span></span><code><span class=sd>&quot;&quot;&quot;Интеграции используемые в проекте&quot;&quot;&quot;</span>
+
+<span class=kn>from</span> <span class=nn>app.integration.google_translate.endpoint</span> <span class=kn>import</span> <span class=n>GoogleTranslateIntegration</span>
+
+<span class=c1># Создание экземпляра интеграции</span>
+<span class=n>gtapi</span> <span class=o>=</span> <span class=n>GoogleTranslateIntegration</span><span class=p>(</span>
+    <span class=n>base_url</span><span class=o>=</span><span class=s2>&quot;https://translate-pa.googleapis.com&quot;</span><span class=p>,</span>
+    <span class=c1># Сохраняем в класс доступы, которые можем использовать в методах интеграции</span>
+    <span class=n>credentials</span><span class=o>=</span><span class=p>{</span><span class=s2>&quot;API_TOKEN&quot;</span><span class=p>:</span> <span class=s2>&quot;...&quot;</span><span class=p>},</span>
+<span class=p>)</span>
+</code></pre></div> <ul> <li>Пример использования в эндпоинте <code>FastAPI</code>:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>datetime</span> <span class=kn>import</span> <span class=n>timedelta</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.cache</span> <span class=kn>import</span> <span class=n>cache_redis</span>
+<span class=kn>from</span> <span class=nn>app.core.cache</span> <span class=kn>import</span> <span class=n>redis_client</span>
+<span class=kn>from</span> <span class=nn>app.core.useintegration</span> <span class=kn>import</span> <span class=n>gtapi</span>
+<span class=kn>from</span> <span class=nn>app.integration.google_translate.schema</span> <span class=kn>import</span> <span class=n>GoogleTranslateSchema</span>
+
+<span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&quot;/translate&quot;</span><span class=p>)</span>
+<span class=c1># Можем легко кешировать ответы от интеграций</span>
+<span class=nd>@cache_redis</span><span class=p>(</span><span class=n>cache_class</span><span class=o>=</span><span class=n>redis_client</span><span class=p>,</span> <span class=n>cache_ttl</span><span class=o>=</span><span class=n>timedelta</span><span class=p>(</span><span class=n>minutes</span><span class=o>=</span><span class=mi>10</span><span class=p>))</span>
+<span class=k>async</span> <span class=k>def</span> <span class=nf>translate</span><span class=p>(</span>
+    <span class=n>text</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>from_lang</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;en&quot;</span><span class=p>,</span> <span class=n>to_lang</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=s2>&quot;ru&quot;</span>
+<span class=p>)</span> <span class=o>-&gt;</span> <span class=n>GoogleTranslateEndpoints</span><span class=o>.</span><span class=n>Schema</span><span class=o>.</span><span class=n>TranslateV2</span><span class=p>:</span>
+    <span class=c1># Вызвать метод интеграции</span>
+    <span class=k>return</span> <span class=k>await</span> <span class=n>gtapi</span><span class=o>.</span><span class=n>translate</span><span class=p>(</span><span class=n>text</span><span class=p>,</span> <span class=n>from_lang</span><span class=p>,</span> <span class=n>to_lang</span><span class=p>)</span>
+</code></pre></div> <h3 id=use-stability-patterns>Use Stability Patterns</h3> <p>Модуль поддерживает паттерны стабильности (Stability Patterns), которые помогают избежать ошибок и перегрузок при работе с внешними сервисами.</p> <blockquote> <p>Основным критерием не успешного выполнения является возникновение исключения (raise) в методе интеграции. Если вы получили ответ с кодом 400 (ошибка клиента) или 500 (ошибка сервера), но не вызвали исключение, Stability Patterns будет считать это успешным выполнением и не применит свою логику для обработки ошибок.</p> </blockquote> <p>Ниже приведено описание основных декораторов:</p> <ul> <li><code>@sp.Fallback</code> (Резервный вариант) - Предоставляет альтернативный путь выполнения в случае сбоя основного. Позволяет системе деградировать контролируемо, а не падать с ошибкой.</li> <li><code>@sp.Timeout</code> (Тайм-аут) - Ограничивает время ожидания ответа от внешнего сервиса. Предотвращает блокировку ресурсов при зависании вызова.</li> <li><code>@sp.CircuitBreaker</code> (Предохранитель) - Отслеживает количество ошибок при вызове внешнего сервиса. При превышении лимита временно блокирует вызов, предотвращая каскадные сбои.</li> <li><code>@sp.RetryPattern</code> (Паттерн повторения) - Автоматически повторяет запрос при возникновении ошибки.</li> <li><code>@sp.Throttling</code> (Регулирование) - Ограничивает количество запросов к ресурсу для предотвращения его перегрузки. Защищает систему от шторма запросов.</li> </ul> <p>Эти паттерны делают систему более устойчивой, минимизируя риск сбоев и обеспечивая плавную деградацию при возникновении проблем.</p> <h3 id=use-py2dantic>Use py2dantic</h3> <p><code>py2dantic</code> — это удобная утилита, которая позволяет быстро создавать схемы Pydantic из словарей Python. Эти схемы можно эффективно использовать для типизации в вашем проекте.</p> <ul> <li>Пример использования:</li> </ul> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>fastapi_accelerator.commands.py2dantic</span> <span class=kn>import</span> <span class=n>generate_pydantic_models</span>
+
+<span class=n>sample_data</span> <span class=o>=</span> <span class=p>{</span>
+    <span class=s2>&quot;items&quot;</span><span class=p>:</span> <span class=p>[</span>
+        <span class=p>{</span>
+            <span class=s2>&quot;id&quot;</span><span class=p>:</span> <span class=s2>&quot;0000&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;premium&quot;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span>
+            <span class=s2>&quot;name&quot;</span><span class=p>:</span> <span class=s2>&quot;Python Developer&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;department&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+            <span class=s2>&quot;has_test&quot;</span><span class=p>:</span> <span class=kc>True</span><span class=p>,</span>
+            <span class=s2>&quot;response_letter_required&quot;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span>
+            <span class=s2>&quot;salary&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+            <span class=s2>&quot;type&quot;</span><span class=p>:</span> <span class=p>{</span><span class=s2>&quot;id&quot;</span><span class=p>:</span> <span class=s2>&quot;open&quot;</span><span class=p>,</span> <span class=s2>&quot;name&quot;</span><span class=p>:</span> <span class=s2>&quot;Открытая&quot;</span><span class=p>},</span>
+            <span class=s2>&quot;address&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+            <span class=s2>&quot;response_url&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+            <span class=s2>&quot;sort_point_distance&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+            <span class=s2>&quot;published_at&quot;</span><span class=p>:</span> <span class=s2>&quot;2024-09-04T08:27:02+0300&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;created_at&quot;</span><span class=p>:</span> <span class=s2>&quot;2024-09-04T08:27:02+0300&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;archived&quot;</span><span class=p>:</span> <span class=kc>False</span><span class=p>,</span>
+            <span class=s2>&quot;apply_alternate_url&quot;</span><span class=p>:</span> <span class=s2>&quot;https://hh.ru/applicant/vacancy_response?vacancyId=0000&quot;</span><span class=p>,</span>
+            <span class=s2>&quot;branding&quot;</span><span class=p>:</span> <span class=p>{</span><span class=s2>&quot;type&quot;</span><span class=p>:</span> <span class=s2>&quot;MAKEUP&quot;</span><span class=p>,</span> <span class=s2>&quot;tariff&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>},</span>
+            <span class=s2>&quot;show_logo_in_search&quot;</span><span class=p>:</span> <span class=kc>True</span>
+        <span class=p>},</span>
+    <span class=p>],</span>
+    <span class=s2>&quot;found&quot;</span><span class=p>:</span> <span class=mi>187</span><span class=p>,</span>
+    <span class=s2>&quot;pages&quot;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+    <span class=s2>&quot;page&quot;</span><span class=p>:</span> <span class=mi>1</span><span class=p>,</span>
+    <span class=s2>&quot;per_page&quot;</span><span class=p>:</span> <span class=mi>100</span><span class=p>,</span>
+    <span class=s2>&quot;clusters&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+    <span class=s2>&quot;arguments&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+    <span class=s2>&quot;fixes&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+    <span class=s2>&quot;suggests&quot;</span><span class=p>:</span> <span class=kc>None</span><span class=p>,</span>
+    <span class=s2>&quot;alternate_url&quot;</span><span class=p>:</span> <span class=s2>&quot;https://hh.ru/search/vacancy?enable_snippets=true&amp;items_on_page=100&amp;order_by=publication_time&amp;page=1&amp;salary=200000&amp;schedule=remote&amp;text=Python+FastAPI&quot;</span><span class=p>,</span>
+<span class=p>}</span>
+
+<span class=k>assert</span> <span class=p>(</span>
+    <span class=n>generate_pydantic_models</span><span class=p>(</span><span class=n>sample_data</span><span class=p>,</span> <span class=n>depth</span><span class=o>=</span><span class=mi>2</span><span class=p>,</span> <span class=n>prfix_class_name</span><span class=o>=</span><span class=s2>&quot;Job&quot;</span><span class=p>)</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+    <span class=o>==</span> <span class=s2>&quot;&quot;&quot;</span>
+<span class=s2>class Job_ItemsItem(BaseModel):</span>
+<span class=s2>    id: str = None</span>
+<span class=s2>    premium: int = None</span>
+<span class=s2>    name: str = None</span>
+<span class=s2>    department: Any = None</span>
+<span class=s2>    has_test: int = None</span>
+<span class=s2>    response_letter_required: int = None</span>
+<span class=s2>    area: Dict = None</span>
+<span class=s2>    salary: Any = None</span>
+<span class=s2>    type: Dict = None</span>
+<span class=s2>    address: Any = None</span>
+<span class=s2>    response_url: Any = None</span>
+<span class=s2>    sort_point_distance: Any = None</span>
+<span class=s2>    published_at: str = None</span>
+<span class=s2>    created_at: str = None</span>
+<span class=s2>    archived: int = None</span>
+<span class=s2>    apply_alternate_url: str = None</span>
+<span class=s2>    branding: Dict = None</span>
+<span class=s2>    show_logo_in_search: int = None</span>
+
+<span class=s2>class Job(BaseModel):</span>
+<span class=s2>    items: List[Job_ItemsItem]</span>
+<span class=s2>    found: int = None</span>
+<span class=s2>    pages: int = None</span>
+<span class=s2>    page: int = None</span>
+<span class=s2>    per_page: int = None</span>
+<span class=s2>    clusters: Any = None</span>
+<span class=s2>    arguments: Any = None</span>
+<span class=s2>    fixes: Any = None</span>
+<span class=s2>    suggests: Any = None</span>
+<span class=s2>    alternate_url: str = None</span>
+<span class=s2>    &quot;&quot;&quot;</span><span class=o>.</span><span class=n>strip</span><span class=p>()</span>
+    <span class=p>)</span>
+</code></pre></div> <h3 id=use-docintegration>Use docintegration</h3> <p>Данный функционал позволяет узнать, какие интеграции используются в проекте, аналогично тому, как это реализовано в OpenAPI Swagger для стандартного FastAPI.</p> <p>Документация доступна по адресу: <code>http://host:port/docintegration</code>.</p> <p>Чтобы активировать этот путь, необходимо в файле <code>main.py</code> в параметре <code>base_pattern</code> указать список интеграций в аргументе <code>useintegration</code>:</p> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>app.core.useintegration</span> <span class=kn>import</span> <span class=n>интеграция_1</span><span class=p>,</span> <span class=n>интеграция_2</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.pattern.pattern_fastapi</span> <span class=kn>import</span> <span class=n>base_pattern</span>
+
+<span class=c1># Паттерн для проекта</span>
+<span class=n>base_pattern</span><span class=p>(</span>
+    <span class=n>app</span><span class=p>,</span>
+    <span class=o>...</span><span class=p>,</span>
+    <span class=n>useintegration</span><span class=o>=</span><span class=p>[</span><span class=n>интеграция_1</span><span class=p>,</span> <span class=n>интеграция_2</span><span class=p>],</span>
+<span class=p>)</span>
+</code></pre></div> <p><img alt="Внешний вид документации" src=../images/Screenshot_20240914_153330.png></p> <h2 id=use-admin-panel>Use Admin Panel</h2> <ol> <li>Установка</li> </ol> <div class=highlight><pre><span></span><code>poetry<span class=w> </span>add<span class=w> </span>flask-admin
+</code></pre></div> <ol> <li>Создать файл <code>admin_panel.py</code></li> </ol> <div class=highlight><pre><span></span><code><span class=kn>from</span> <span class=nn>flask</span> <span class=kn>import</span> <span class=n>Flask</span>
+
+<span class=kn>from</span> <span class=nn>app.core.config</span> <span class=kn>import</span> <span class=n>ADMIN_PASSWORD</span><span class=p>,</span> <span class=n>ADMIN_USERNAME</span><span class=p>,</span> <span class=n>SECRET_KEY</span>
+<span class=kn>from</span> <span class=nn>app.db.base</span> <span class=kn>import</span> <span class=n>DatabaseManager</span>
+<span class=kn>from</span> <span class=nn>app.models</span> <span class=kn>import</span> <span class=n>File</span><span class=p>,</span> <span class=n>User</span>
+<span class=kn>from</span> <span class=nn>fastapi_accelerator.pattern_flask_admin</span> <span class=kn>import</span> <span class=n>base_pattern</span>
+
+<span class=n>app</span> <span class=o>=</span> <span class=n>Flask</span><span class=p>(</span><span class=vm>__name__</span><span class=p>)</span>
+
+<span class=n>admin</span> <span class=o>=</span> <span class=n>base_pattern</span><span class=p>(</span>
+    <span class=n>app</span><span class=p>,</span>
+    <span class=n>SECRET_KEY</span><span class=p>,</span>
+    <span class=n>ADMIN_PASSWORD</span><span class=p>,</span>
+    <span class=n>ADMIN_USERNAME</span><span class=p>,</span>
+    <span class=c1># &gt; Модели которые нужны в админ панели</span>
+    <span class=n>models</span><span class=o>=</span><span class=p>[</span><span class=n>User</span><span class=p>,</span> <span class=n>File</span><span class=p>],</span>
+    <span class=n>database_manager</span><span class=o>=</span><span class=n>DatabaseManager</span><span class=p>,</span>
+<span class=p>)</span>
+
+
+<span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>&quot;__main__&quot;</span><span class=p>:</span>
+    <span class=n>app</span><span class=o>.</span><span class=n>run</span><span class=p>(</span>
+        <span class=n>host</span><span class=o>=</span><span class=s2>&quot;0.0.0.0&quot;</span><span class=p>,</span>
+        <span class=n>port</span><span class=o>=</span><span class=mi>8001</span><span class=p>,</span>
+        <span class=n>debug</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span>
+    <span class=p>)</span>
+</code></pre></div> <ol> <li> <p>Запускать <code>python admin_panel.py</code></p> </li> <li> <p>Войти в админ панель:</p> </li> <li> <p><code>http://localhost:8233/admin</code></p> </li> <li><code>http://localhost:8233/login</code></li> <li><code>http://localhost:8233/logout</code></li> </ol> </article> </div> <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script> </div> </main> <footer class=md-footer> <div class="md-footer-meta md-typeset"> <div class="md-footer-meta__inner md-grid"> <div class=md-copyright> Made with <a href=https://squidfunk.github.io/mkdocs-material/ target=_blank rel=noopener> Material for MkDocs </a> </div> </div> </div> </footer> </div> <div class=md-dialog data-md-component=dialog> <div class="md-dialog__inner md-typeset"></div> </div> <script id=__config type=application/json>{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}}</script> <script src=../assets/javascripts/bundle.d6f25eb3.min.js></script> </body> </html>
